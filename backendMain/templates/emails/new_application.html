@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #2563eb; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background: #f8fafc; }
+        .job-card { background: white; padding: 15px; margin: 15px 0; border-left: 4px solid #2563eb; }
+        .applicant-info { background: white; padding: 15px; margin: 15px 0; }
+        .button { display: inline-block; background: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+        .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 New Job Application!</h1>
+            <p>You have received a new application for your job posting</p>
+        </div>
+
+        <div class="content">
+            <div class="job-card">
+                <h2>{{ job.title }}</h2>
+                <p><strong>Company:</strong> {{ job.company }}</p>
+                <p><strong>Location:</strong> {{ job.location|default:"Not specified" }}</p>
+                <p><strong>Posted:</strong> {{ job.posted_date|date:"M d, Y" }}</p>
+            </div>
+
+            <div class="applicant-info">
+                <h3>👤 Applicant Information</h3>
+                <p><strong>Name:</strong> {{ applicant.first_name }} {{ applicant.last_name }}</p>
+                <p><strong>Email:</strong> {{ applicant.email }}</p>
+                {% if application.resume %}
+                <p><strong>Resume:</strong> Available</p>
+                {% endif %}
+                {% if application.cover_letter %}
+                <p><strong>Cover Letter:</strong> {{ application.cover_letter|truncatechars:100 }}</p>
+                {% endif %}
+            </div>
+
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{{ site_url }}/admin/jobs/jobapplication/{{ application.id }}/change/" class="button">
+                    📋 View Application Details
+                </a>
+            </div>
+
+            <p>You can review this application and update its status in your recruiter dashboard.</p>
+        </div>
+
+        <div class="footer">
+            <p>This email was sent by AeroOps Intel Job Portal</p>
+            <p>If you have any questions, please contact our support team.</p>
+        </div>
+    </div>
+</body>
+</html>

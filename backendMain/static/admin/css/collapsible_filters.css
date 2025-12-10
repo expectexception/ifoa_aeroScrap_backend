@@ -1,0 +1,175 @@
+/* Collapsible Filters for Django Admin */
+
+#changelist-filter {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* Filter toggle button */
+.filter-toggle-btn {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: background 0.2s ease;
+}
+
+.filter-toggle-btn:hover {
+    background: #1d4ed8;
+}
+
+.filter-toggle-btn .icon {
+    font-size: 18px;
+    transition: transform 0.3s ease;
+}
+
+.filter-toggle-btn.collapsed .icon {
+    transform: rotate(-90deg);
+}
+
+/* Filter content */
+.filter-content {
+    max-height: 2000px;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    opacity: 1;
+}
+
+.filter-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+}
+
+/* Make individual filter sections collapsible too */
+#changelist-filter h3 {
+    cursor: pointer;
+    user-select: none;
+    padding: 10px 15px;
+    margin: 0;
+    background: #f3f4f6;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.2s ease;
+}
+
+#changelist-filter h3:hover {
+    background: #e5e7eb;
+}
+
+#changelist-filter h3::after {
+    content: '▼';
+    font-size: 10px;
+    transition: transform 0.3s ease;
+    color: #6b7280;
+}
+
+#changelist-filter h3.collapsed::after {
+    transform: rotate(-90deg);
+}
+
+#changelist-filter ul {
+    max-height: 500px;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+    opacity: 1;
+}
+
+#changelist-filter ul.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0 !important;
+}
+
+/* Better spacing for filter items */
+#changelist-filter li {
+    padding: 6px 15px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+#changelist-filter li:last-child {
+    border-bottom: none;
+}
+
+#changelist-filter li a {
+    color: #374151;
+    text-decoration: none;
+    display: block;
+    transition: color 0.2s ease;
+}
+
+#changelist-filter li a:hover {
+    color: #2563eb;
+}
+
+#changelist-filter li.selected a {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+/* Compact mode for collapsed state */
+#changelist-filter.compact {
+    width: 60px;
+    overflow: hidden;
+}
+
+#changelist-filter.compact h3,
+#changelist-filter.compact ul,
+#changelist-filter.compact .filter-toggle-btn span {
+    display: none;
+}
+
+#changelist-filter.compact .filter-toggle-btn {
+    padding: 12px;
+    justify-content: center;
+}
+
+/* Animation for collapse/expand */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.filter-content:not(.collapsed) {
+    animation: slideIn 0.3s ease;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    #changelist-filter {
+        position: fixed;
+        right: -100%;
+        top: 0;
+        height: 100vh;
+        z-index: 1000;
+        transition: right 0.3s ease;
+        background: white;
+        box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+    }
+    
+    #changelist-filter.open {
+        right: 0;
+    }
+}

@@ -1,0 +1,788 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --accent-gradient: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+        --aviation-gradient: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
+        --sky-gradient: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+        --dark-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        --text-dark: #1e293b;
+        --text-light: #64748b;
+        --border-color: #e2e8f0;
+        --error-bg: #fee2e2;
+        --error-border: #dc2626;
+        --success-bg: #d1fae5;
+        --success-border: #10b981;
+        --bg-white: #ffffff;
+        --bg-form: #ffffff;
+        --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Enhanced Dark Mode */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --text-dark: #f1f5f9;
+            --text-light: #cbd5e1;
+            --border-color: #334155;
+            --error-bg: #450a0a;
+            --error-border: #dc2626;
+            --success-bg: #064e3b;
+            --success-border: #10b981;
+            --bg-white: #1e293b;
+            --bg-form: #0f172a;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+    }
+
+    [data-theme="dark"] {
+        --text-dark: #f1f5f9;
+        --text-light: #cbd5e1;
+        --border-color: #334155;
+        --error-bg: #450a0a;
+        --error-border: #dc2626;
+        --success-bg: #064e3b;
+        --success-border: #10b981;
+        --bg-white: #1e293b;
+        --bg-form: #0f172a;
+        --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    [data-theme="light"] {
+        --text-dark: #1e293b;
+        --text-light: #64748b;
+        --border-color: #e2e8f0;
+        --error-bg: #fee2e2;
+        --error-border: #dc2626;
+        --success-bg: #d1fae5;
+        --success-border: #10b981;
+        --bg-white: #ffffff;
+        --bg-form: #ffffff;
+        --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    body.login {
+        background: var(--dark-gradient);
+        font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    #header { display: none; }
+
+    .login-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: 100vh;
+        align-items: stretch;
+        position: relative;
+    }
+
+    /* Enhanced Brand Section */
+    .brand-section {
+        background: var(--aviation-gradient);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 3rem 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .brand-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .brand-section::after {
+        content: '✈️';
+        position: absolute;
+        font-size: 8rem;
+        opacity: 0.1;
+        animation: fly 20s linear infinite;
+        pointer-events: none;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+    }
+
+    @keyframes fly {
+        0% { transform: translateX(-100px) translateY(-100px) rotate(0deg); }
+        100% { transform: translateX(calc(100vw + 100px)) translateY(calc(100vh + 100px)) rotate(360deg); }
+    }
+
+    .brand-content {
+        max-width: 480px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .brand-logo {
+        width: 140px;
+        height: 140px;
+        margin: 0 auto 2.5rem;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+        border-radius: 24px;
+        padding: 1.5rem;
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 
+            0 20px 40px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .brand-logo:hover {
+        transform: scale(1.05) rotate(5deg);
+        box-shadow: 
+            0 25px 50px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .brand-logo img {
+        width: 100%;
+        height: auto;
+        filter: brightness(1.2) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+    }
+
+    .brand-title {
+        color: white;
+        font-size: 3rem;
+        font-weight: 800;
+        margin: 0 0 1rem 0;
+        text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .brand-subtitle {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.25rem;
+        margin: 0 0 2rem 0;
+        font-weight: 400;
+        line-height: 1.6;
+    }
+
+    .brand-features {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.95rem;
+    }
+
+    .feature-item svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+    }
+
+    /* Enhanced Login Form Section */
+    .login-form-section {
+        background: var(--bg-white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 2rem;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .login-form-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--aviation-gradient);
+    }
+
+    .login-form-container {
+        max-width: 420px;
+        width: 100%;
+        animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .welcome-title {
+        color: var(--text-dark);
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin: 0 0 0.75rem 0;
+        background: var(--aviation-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .welcome-subtitle {
+        color: var(--text-light);
+        margin: 0 0 3rem 0;
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+
+    /* Enhanced Form Elements */
+    .form-group {
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    .form-label {
+        display: flex;
+        align-items: center;
+        color: var(--text-dark);
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .form-label svg {
+        margin-right: 0.75rem;
+        width: 18px;
+        height: 18px;
+        color: #667eea;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 1.25rem 1rem;
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        background: var(--bg-form);
+        color: var(--text-dark);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 
+            0 0 0 4px rgba(102, 126, 234, 0.15),
+            var(--shadow-md);
+        transform: translateY(-2px);
+    }
+
+    .form-input:valid {
+        border-color: #10b981;
+    }
+
+    .password-wrapper {
+        position: relative;
+    }
+
+    .password-wrapper input {
+        padding-right: 3.5rem;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: var(--text-light);
+        transition: all 0.2s ease;
+        padding: 0.5rem;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+    }
+
+    .password-toggle:hover {
+        color: #667eea;
+        background: rgba(102, 126, 234, 0.1);
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    /* Enhanced Submit Button */
+    .submit-btn {
+        width: 100%;
+        background: var(--aviation-gradient);
+        color: white;
+        border: none;
+        padding: 1.25rem 2rem;
+        border-radius: 16px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 1.5rem;
+        box-shadow: var(--shadow-md);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .submit-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        transition: left 0.5s;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .submit-btn:hover::before {
+        left: 100%;
+    }
+
+    .submit-btn:active {
+        transform: translateY(-1px);
+    }
+
+    .submit-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Enhanced Messages */
+    .message {
+        padding: 1.25rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        font-weight: 500;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .error-message {
+        background: var(--error-bg);
+        border-left: 4px solid var(--error-border);
+        color: #991b1b;
+    }
+
+    .success-message {
+        background: var(--success-bg);
+        border-left: 4px solid var(--success-border);
+        color: #065f46;
+    }
+
+    .message svg {
+        flex-shrink: 0;
+        margin-top: 0.1rem;
+    }
+
+    /* Enhanced Footer */
+    .login-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 50%;
+        text-align: center;
+        padding: 2rem;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
+        z-index: 2;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.3));
+    }
+
+    .login-footer p {
+        margin: 0;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Enhanced Responsive Design */
+    @media (max-width: 1024px) {
+        .login-container {
+            grid-template-columns: 1fr;
+        }
+
+        .brand-section {
+            min-height: 35vh;
+            padding: 2rem 1rem;
+        }
+
+        .brand-logo {
+            width: 100px;
+            height: 100px;
+            padding: 1.25rem;
+        }
+
+        .brand-title {
+            font-size: 2.25rem;
+        }
+
+        .brand-subtitle {
+            font-size: 1.1rem;
+        }
+
+        .login-form-section {
+            min-height: 65vh;
+            padding: 2rem 1.5rem;
+        }
+
+        .login-footer {
+            width: 100%;
+            position: static;
+            color: var(--text-light);
+            background: var(--bg-white);
+            margin-top: 2rem;
+            padding: 1.5rem;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .brand-section {
+            min-height: 30vh;
+            padding: 1.5rem 1rem;
+        }
+
+        .brand-title {
+            font-size: 2rem;
+        }
+
+        .brand-subtitle {
+            font-size: 1rem;
+        }
+
+        .brand-features {
+            display: none;
+        }
+
+        .login-form-container {
+            padding: 0;
+        }
+
+        .welcome-title {
+            font-size: 2rem;
+        }
+
+        .welcome-subtitle {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-input {
+            padding: 1rem 0.75rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .brand-section {
+            min-height: 25vh;
+        }
+
+        .brand-logo {
+            width: 80px;
+            height: 80px;
+            padding: 1rem;
+        }
+
+        .brand-title {
+            font-size: 1.75rem;
+        }
+
+        .login-form-section {
+            padding: 1.5rem 1rem;
+        }
+    }
+
+    /* Loading State */
+    .loading {
+        position: relative;
+        pointer-events: none;
+    }
+
+    .loading::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 20px;
+        height: 20px;
+        margin: -10px 0 0 -10px;
+        border: 2px solid transparent;
+        border-top: 2px solid currentColor;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} login{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <!-- Enhanced Brand Section -->
+    <div class="brand-section">
+        <div class="brand-content">
+            <div class="brand-logo">
+                <img src="{% static 'IFOA_India_.png' %}" alt="IFOA Aviation Logo">
+            </div>
+            <h1 class="brand-title">IFOA Aviation</h1>
+            <p class="brand-subtitle">Global Aviation Talent & Job Intelligence Platform</p>
+            
+            <div class="brand-features">
+                <div class="feature-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                    Secure Aviation Data Management
+                </div>
+                <div class="feature-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    Real-time Job Intelligence
+                </div>
+                <div class="feature-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    Global Talent Network
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Login Form Section -->
+    <div class="login-form-section">
+        <div class="login-form-container">
+            <h2 class="welcome-title">Welcome Back</h2>
+            <p class="welcome-subtitle">Sign in to access your aviation management dashboard</p>
+
+            <!-- Enhanced Error Messages -->
+            {% if form.errors and not form.non_field_errors %}
+            <div class="message error-message">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div>
+                    {% if form.errors.items|length == 1 %}
+                        {% trans "Please correct the error below." %}
+                    {% else %}
+                        {% trans "Please correct the errors below." %}
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if form.non_field_errors %}
+            <div class="message error-message">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div>{{ form.non_field_errors }}</div>
+            </div>
+            {% endif %}
+
+            <!-- Enhanced Login Form -->
+            <form action="{{ app_path }}" method="post" id="login-form">
+                {% csrf_token %}
+
+                <!-- Username Field -->
+                <div class="form-group">
+                    <label class="form-label" for="{{ form.username.id_for_label }}">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                        {% trans 'Username or Email' %}
+                    </label>
+                    <input type="text" 
+                           name="{{ form.username.name }}" 
+                           id="{{ form.username.id_for_label }}" 
+                           class="form-input"
+                           maxlength="254" 
+                           required
+                           autocomplete="username"
+                           placeholder="Enter your username or email">
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <label class="form-label" for="{{ form.password.id_for_label }}">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                        {% trans 'Password' %}
+                    </label>
+                    <div class="password-wrapper">
+                        <input type="password" 
+                               name="{{ form.password.name }}" 
+                               id="id_password" 
+                               class="form-input"
+                               required
+                               autocomplete="current-password"
+                               placeholder="Enter your password">
+                        <span class="password-toggle" id="password-toggle-icon" title="Toggle password visibility">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.87-1.554A2 2 0 0112 10a2 2 0 012 2m0 0a2 2 0 002 2M3 3l18 18"/>
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Enhanced Password Reset Link -->
+                {% url 'admin_password_reset' as password_reset_url %}
+                {% if password_reset_url %}
+                <div style="text-align: right; margin: -1rem 0 2rem 0;">
+                    <a href="{{ password_reset_url }}" style="color: #667eea; text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: color 0.2s;">
+                        {% trans 'Forgot your password?' %}
+                    </a>
+                </div>
+                {% endif %}
+
+                <!-- Enhanced Submit Button -->
+                <button type="submit" class="submit-btn" id="submit-btn">
+                    <span id="btn-text">{% trans 'Sign In to Dashboard' %}</span>
+                </button>
+
+                <input type="hidden" name="next" value="{{ next }}" />
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Footer -->
+<div class="login-footer">
+    <p>&copy; 2025 IFOA Aviation Management System. All rights reserved. | Secure Access Portal</p>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const passwordField = document.getElementById('id_password');
+        const toggleIcon = document.getElementById('password-toggle-icon');
+        const submitBtn = document.getElementById('submit-btn');
+        const btnText = document.getElementById('btn-text');
+        const loginForm = document.getElementById('login-form');
+
+        // Password toggle functionality
+        if (passwordField && toggleIcon) {
+            toggleIcon.addEventListener('click', function() {
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+
+                // Toggle icon with smooth transition
+                toggleIcon.style.transform = 'translateY(-50%) scale(0.9)';
+                setTimeout(() => {
+                    if (type === 'text') {
+                        toggleIcon.innerHTML = `
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                        `;
+                    } else {
+                        toggleIcon.innerHTML = `
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.87-1.554A2 2 0 0112 10a2 2 0 012 2m0 0a2 2 0 002 2M3 3l18 18"/>
+                            </svg>
+                        `;
+                    }
+                    toggleIcon.style.transform = 'translateY(-50%) scale(1)';
+                }, 150);
+            });
+        }
+
+        // Form submission loading state
+        if (loginForm && submitBtn && btnText) {
+            loginForm.addEventListener('submit', function() {
+                submitBtn.disabled = true;
+                btnText.textContent = 'Signing In...';
+                submitBtn.classList.add('loading');
+            });
+        }
+
+        // Add input validation styles
+        const inputs = document.querySelectorAll('.form-input');
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.value.trim() !== '') {
+                    this.classList.add('filled');
+                } else {
+                    this.classList.remove('filled');
+                }
+            });
+        });
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                loginForm.submit();
+            }
+        });
+    });
+</script>
+{% endblock %}

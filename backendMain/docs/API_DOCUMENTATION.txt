@@ -1,0 +1,589 @@
+AeroOps - Backend API Documentation
+=================================
+
+Base URL: /api/
+
+Authentication
+--------------
+- Protected endpoints require a Bearer token in the `Authorization` header.
+- Environment variable: `ADMIN_API_KEY`. Example header:
+
+  Authorization: Bearer <ADMIN_API_KEY>
+
+- If `ADMIN_API_KEY` is not set in the environment, auth is disabled (development convenience). In production you should always set it.
+
+
+RESUMES API
+-----------
+Mounted under: `/api/` (resumes router prefix is registered on the Ninja API)
+
+1) POST /api/upload-resume
+   - Description: Upload a resume file (PDF, TXT, DOCX). The service will parse the resume (if parser available), store file content and parsed data in DB, and append to JSON store.
+   - Content-Type: multipart/form-data
+   - Form fields:
+     - `file`: binary file to upload (required)
+   - Example curl:
+     curl -X POST "http://127.0.0.1:8000/api/upload-resume" -F "file=@resume.pdf"
+   - Success response (200): JSON object with saved resume fields, e.g.:
+     {
+       "id": 1,
+       "filename": "resume.pdf",
+       "name": "Alice Example",
+       "email": "alice@example.com",
+       "phones": [...],
+       "skills": {...},
+       "total_score": 42.5,
+       "json_store_id": "<id>"
+     }
+   - Errors:
+     - 400 / ValidationError when file missing or unsupported format.
+
+2) POST /api/upload-resume-with-info
+   - Description: Upload a resume file plus structured metadata in a `metadata` form field (JSON string). Useful when your scraper extracts structured fields.
+   - Form fields:
+     - `metadata` (string): JSON object with `personal`, `education`, `experience`, `roles`, `certificates`, `licenses`, and optionally `fileName`.
+     - `file`: optional uploaded file
+   - Example curl:
+     curl -X POST "http://127.0.0.1:8000/api/upload-resume-with-info" \
+       -F "metadata={\"personal\":{\"fullName\":\"Alice\",\"email\":\"a@b.com\"}}" \
+       -F "file=@resume.pdf"
+   - Response: same structure as `/upload-resume` with added `json_store_id` and parsed details.
+
+3) GET /api/resumes
+   - Description: List resumes (paginated via skip/limit). Supports `search` parameter to search name/email.
+   - Query params:
+     - `skip` (int, default 0)
+     - `limit` (int, default 20)
+     - `search` (string, optional)
+   - Example:
+     GET /api/resumes?skip=0&limit=20&search=alice
+   - Response: JSON array of resume objects (same as returned by upload endpoints)
+
+4) GET /api/resumes/{resume_id}
+   - Description: Get full resume entry by ID.
+   - Response: resume JSON or 404 if not found.
+
+5) GET /api/resumes/{resume_id}/download
+   - Description: Download stored file content for the resume (Content-Disposition attachment).
+   - Returns: file stream with appropriate content-type; 404 if no file stored.
+
+6) DELETE /api/resumes/{resume_id}
+   - Description: Delete resume by ID. Returns {status:'success', message: ...} or 404.
+
+7) DELETE /api/resumes
+   - Description: Delete all resumes. Returns summary: {status: 'success', message: 'Deleted N resumes', deleted: N}
+
+8) GET /api/stats (resumes)
+   - Description: Aggregate resume stats: total, avg_score, top_skills, certifications.
+   - Response sample:
+     {
+       "total": 123,
+       "avg_score": 37.2,
+       "top_skills": [{"name": "aeroplane", "count": 12}, ...],
+       "certifications": [{"name": "ATPL", "count": 4}, ...]
+     }
+
+9) JSON Store endpoints
+   - GET /api/json-store/resumes
+     - Returns the JSON store (list of stored resume payloads).
+   - GET /api/json-store/resumes/{resume_id}
+     - Return a single stored resume entry by JSON-store id.
+
+10) GET /api/config
+    - Returns parser configuration if available; otherwise returns {"error": "Parser not available"}
+
+
+JOBS API
+--------
+Mounted under: `/api/jobs/` (jobs router)
+
+Authentication: many of the write/admin endpoints are protected by `ADMIN_API_KEY` (Bearer token). See Auth above.
+
+1) POST /api/jobs/ingest
+   - Auth: Required (Bearer token) when ADMIN_API_KEY set
+   - Description: Ingest a single job payload (from scrapers). Applies classification heuristics and deduplication.
+   - Body: JSON object. Allowed fields (examples):
+     {
+       "title": "Senior Captain",
+       "normalized_title": "senior captain",
+       "company": "CargoCorp",
+       "company_id": 123,
+       "country_code": "US",
+       "operation_type": "cargo",
+       "posted_date": "2025-10-01",
+       "url": "https://jobs.example.com/123",
+       "description": "...",
+       "status": "active",
+       "senior_flag": true,
+       "source": "scraper-name",
+       "raw_json": { ... }
+     }
+   - Responses:
+     - {"status": "created", "id": <job_id>} — new job created
+     - {"status": "updated", "id": <job_id>} — existing job updated (match by URL)
+     - {"status": "dedup-updated", "id": <job_id>} — duplicate found and updated (fuzzy/title/company/date match)
+   - Notes:
+     - The ingest logic will attempt to auto-classify `operation_type` based on company name when missing, auto-create a `CompanyMapping` if one doesn't exist, and detect senior roles from title.
+
+2) POST /api/jobs/bulk_ingest
+   - Auth: Required
+   - Body: JSON array of job objects (same shape as single ingest)
+   - Response: summary with per-item results, e.g.:
+     {
+       "results": [{"status":"created","id":1}, ...],
+       "found": 10,
+       "inserted": 8,
+       "updated": 2,
+       "errors": []
+     }
+   - Note: This endpoint logs a `CrawlLog` record for the run.
+
+3) GET /api/jobs/export/daily.csv?date=YYYY-MM-DD
+   - Auth: public (no key required)
+   - Description: Export CSV of jobs whose `posted_date` equals `date` (defaults to today).
+   - Returns: CSV attachment with columns: Country, Operation Type, Job Title, Company, Date Posted, URL, Brief Description, Source, Senior Flag
+
+4) GET /api/jobs/
+   - Description: List jobs with filters and pagination.
+   - Query params:
+     - `skip` (int, default 0)
+     - `limit` (int, default 100)
+     - `country` (string)
+     - `type` (operation type)
+     - `senior` (boolean)
+     - `company` (string, partial match)
+     - `title` (string, partial match)
+   - Response: array of brief job objects:
+     [{"id":1, "title":"...","company":"...","url":"...","posted_date":"YYYY-MM-DD","status":"active"}, ...]
+
+5) GET /api/jobs/id/{job_id}
+   - Description: Get full job details by ID.
+   - Response:
+     {
+       "id": 1,
+       "title": "...",
+       "company": "...",
+       "url": "...",
+       "description": "...",
+       "raw_json": {...},
+       "operation_type": "cargo",
+       "senior_flag": true,
+       "posted_date": "2025-10-01",
+       "created_at": "2025-10-02T...",
+       "updated_at": "2025-10-02T..."
+     }
+
+6) PATCH /api/jobs/{job_id}
+   - Auth: Required
+   - Description: Partial update of a Job object. Provide JSON with the fields to update (only fields in the Job model are applied).
+   - Example body: {"status": "expired", "operation_type": "business"}
+   - Response: {"status": "updated", "id": <job_id>} or {"error": "not found"}
+
+7) DELETE /api/jobs/{job_id}
+   - Auth: Required
+   - Description: Delete a job by ID
+   - Response: {"status": "deleted", "id": <job_id>} or {"error": "not found"}
+
+8) GET /api/jobs/search?q=term&limit=N
+   - Description: Simple search across title, company, and description (case-insensitive partial match).
+   - Response: list of matching job summaries.
+
+9) GET /api/jobs/admin/company-mappings
+   - Auth: Required
+   - Query params: skip, limit
+   - Response: list of company mapping objects:
+     [{"id":1, "company_name":"CargoCorp","normalized_name":"cargocorp","operation_type":"cargo","country_code":"US","notes":"..."}, ...]
+
+10) POST /api/jobs/admin/company-mappings
+    - Auth: Required
+    - Body: JSON: {"company_name": "CargoCorp", "normalized_name": "cargocorp", "operation_type": "cargo", "country_code": "US", "notes":"..."}
+    - Response: {"id": <id>, "created": true/false}
+
+11) PUT /api/jobs/admin/company-mappings/{mapping_id}
+    - Auth: Required
+    - Body: CompanyMappingIn (same fields as POST)
+    - Response: {"id": <id>, "updated": true}
+
+12) DELETE /api/jobs/admin/company-mappings/{mapping_id}
+    - Auth: Required
+    - Response: {"id": <id>, "deleted": true}
+
+13) GET /api/jobs/admin/unknown-companies?limit=N
+    - Description: Returns a list of company names present in Job records that do not have a corresponding CompanyMapping.
+    - Response: array of strings
+
+14) GET /api/jobs/alerts/senior?hours=24
+    - Description: Returns recently created jobs flagged as senior within the past `hours`.
+    - Response: list of job summaries with created_at timestamps.
+
+15) GET /api/jobs/stats
+    - Description: Return counts and simple aggregates (total, missing operation type, top companies, by country)
+    - Response sample:
+      {
+        "total": 1000,
+        "missing_operation_type": 123,
+        "by_country": [{"country_code":"US","count":500}, ...],
+        "top_companies": [{"company":"ExampleCo","count":50}, ...]
+      }
+
+16) GET /api/jobs/health  (also POST /api/jobs/health)
+    - Description: Simple healthcheck endpoint. Returns {"ok": true, "db": "ok"} when DB is reachable.
+
+
+NEW ADVANCED APIs (Added Nov 2025)
+===================================
+
+ADVANCED SEARCH & FILTERING
+----------------------------
+
+17) GET /api/jobs/advanced-search
+    - Description: Advanced search with multiple filters, sorting, and pagination
+    - Query params:
+      - `q` (string): Search across title, company, description
+      - `countries` (string): Comma-separated country codes (e.g., "US,CA,UK")
+      - `operation_types` (string): Comma-separated types (e.g., "Airline,MRO,Airport")
+      - `senior_only` (boolean): Filter only senior positions
+      - `date_from` (string): YYYY-MM-DD format (posted_date >=)
+      - `date_to` (string): YYYY-MM-DD format (posted_date <=)
+      - `status` (string): Job status (default: "active")
+      - `sort_by` (string): Field to sort by (created_at, posted_date, title, company)
+      - `order` (string): Sort order (asc, desc)
+      - `skip` (int): Pagination offset (default: 0)
+      - `limit` (int): Results per page (default: 50)
+    - Example:
+      GET /api/jobs/advanced-search?q=pilot&countries=US,UK&senior_only=true&sort_by=posted_date&order=desc
+    - Response:
+      {
+        "total": 150,
+        "skip": 0,
+        "limit": 50,
+        "results": [
+          {
+            "id": 1,
+            "title": "Senior Pilot",
+            "company": "Delta Airlines",
+            "url": "...",
+            "country_code": "US",
+            "operation_type": "Airline",
+            "senior_flag": true,
+            "posted_date": "2025-11-15",
+            "status": "active",
+            "source": "aviation_jobs",
+            "created_at": "2025-11-16T..."
+          },
+          ...
+        ]
+      }
+
+
+COMPANY APIs
+------------
+
+18) GET /api/jobs/companies
+    - Description: List all companies with job counts
+    - Query params:
+      - `skip` (int, default: 0)
+      - `limit` (int, default: 100)
+    - Response:
+      [
+        {
+          "company": "Delta Airlines",
+          "job_count": 45
+        },
+        ...
+      ]
+
+19) GET /api/jobs/companies/{company_name}
+    - Description: Get detailed company profile with statistics
+    - Example: GET /api/jobs/companies/Delta Airlines
+    - Response:
+      {
+        "company_name": "Delta Airlines",
+        "total_jobs": 45,
+        "active_jobs": 38,
+        "senior_positions": 12,
+        "by_country": [
+          {"country_code": "US", "count": 30},
+          {"country_code": "UK", "count": 15}
+        ],
+        "by_operation_type": [
+          {"operation_type": "Airline", "count": 45}
+        ],
+        "company_info": {
+          "normalized_name": "delta airlines",
+          "operation_type": "Airline",
+          "country_code": "US",
+          "notes": "Major US carrier"
+        },
+        "recent_jobs": [
+          {
+            "id": 123,
+            "title": "Senior Pilot",
+            "url": "...",
+            "posted_date": "2025-11-15",
+            "country_code": "US"
+          },
+          ...
+        ]
+      }
+
+20) GET /api/jobs/companies/{company_name}/jobs
+    - Description: Get all jobs from a specific company
+    - Query params: skip, limit
+    - Response: Array of job objects with full details
+
+21) GET /api/jobs/companies/trending
+    - Description: Companies with most job postings in recent days
+    - Query params:
+      - `days` (int, default: 7): Look back period
+      - `limit` (int, default: 20): Number of companies
+    - Response:
+      [
+        {
+          "company": "Delta Airlines",
+          "recent_job_count": 15,
+          "period_days": 7
+        },
+        ...
+      ]
+
+
+ANALYTICS APIs
+--------------
+
+22) GET /api/jobs/analytics/trends
+    - Description: Job posting trends over time
+    - Query params:
+      - `days` (int, default: 30): Time period to analyze
+    - Response:
+      {
+        "period_days": 30,
+        "total_jobs_posted": 250,
+        "growth_rate_percent": 15.5,
+        "daily_breakdown": [
+          {
+            "date": "2025-11-01",
+            "jobs_posted": 8
+          },
+          ...
+        ]
+      }
+
+23) GET /api/jobs/analytics/geographic
+    - Description: Jobs distribution by country/location
+    - Response:
+      [
+        {
+          "country_code": "US",
+          "total_jobs": 450
+        },
+        {
+          "country_code": "UK",
+          "total_jobs": 180
+        },
+        ...
+      ]
+
+24) GET /api/jobs/analytics/operation-types
+    - Description: Statistics by operation type (Airline, MRO, Airport, etc.)
+    - Response:
+      [
+        {
+          "operation_type": "Airline",
+          "total": 650
+        },
+        {
+          "operation_type": "MRO",
+          "total": 180
+        },
+        ...
+      ]
+
+
+RECENT ACTIVITY
+---------------
+
+25) GET /api/jobs/recent
+    - Description: Recently added jobs
+    - Query params:
+      - `hours` (int, default: 24): Look back period in hours
+      - `limit` (int, default: 50): Max results
+    - Response:
+      [
+        {
+          "id": 123,
+          "title": "Captain",
+          "company": "Delta Airlines",
+          "url": "...",
+          "country_code": "US",
+          "created_at": "2025-11-20T10:30:00",
+          "hours_ago": 2
+        },
+        ...
+      ]
+
+26) GET /api/jobs/updated
+    - Description: Recently updated jobs
+    - Query params: hours, limit (same as /recent)
+    - Response: Similar format with `updated_at` instead of `created_at`
+
+
+JOB COMPARISON
+--------------
+
+27) POST /api/jobs/compare
+    - Description: Compare multiple jobs side by side (max 10)
+    - Body: JSON array of job IDs
+      {
+        "job_ids": [1, 2, 3, 4]
+      }
+    - Response: Array of full job objects for comparison
+
+28) GET /api/jobs/similar/{job_id}
+    - Description: Find similar jobs based on company and title
+    - Query params:
+      - `limit` (int, default: 10): Max similar jobs to return
+    - Response:
+      [
+        {
+          "id": 124,
+          "title": "First Officer",
+          "company": "Delta Airlines",
+          "url": "...",
+          "country_code": "US",
+          "operation_type": "Airline",
+          "similarity_reason": "Same company"
+        },
+        ...
+      ]
+
+
+BULK EXPORT
+-----------
+
+29) GET /api/jobs/export/json
+    - Description: Export jobs as JSON file
+    - Query params:
+      - `country` (string): Filter by country
+      - `operation_type` (string): Filter by type
+      - `status` (string, default: "active"): Filter by status
+      - `limit` (int, default: 1000): Max jobs to export
+    - Returns: JSON file download with all job details
+    - Example: GET /api/jobs/export/json?country=US&operation_type=Airline&limit=500
+
+
+SCRAPER MANAGEMENT
+------------------
+
+30) GET /api/jobs/admin/scrapers/status
+    - Auth: Required
+    - Description: Get status of all scrapers with recent execution history
+    - Response:
+      {
+        "scrapers": {
+          "aviation_jobs": [
+            {
+              "run_time": "2025-11-20T02:00:00",
+              "items_found": 75,
+              "items_inserted": 60,
+              "items_updated": 10,
+              "error": null
+            },
+            ...
+          ],
+          "air_india": [...],
+          "goose": [...]
+        },
+        "total_runs": 150,
+        "last_run": "2025-11-20T02:15:00"
+      }
+
+31) GET /api/jobs/admin/scrapers/logs
+    - Auth: Required
+    - Description: Get detailed scraper execution logs
+    - Query params:
+      - `source` (string, optional): Filter by scraper name
+      - `limit` (int, default: 50): Max log entries
+    - Response:
+      [
+        {
+          "id": 45,
+          "source": "aviation_jobs",
+          "run_time": "2025-11-20T02:00:00",
+          "items_found": 75,
+          "items_inserted": 60,
+          "items_updated": 10,
+          "success_rate": 93.33,
+          "error": null
+        },
+        ...
+      ]
+
+
+ADMIN UI (Django Admin)
+-----------------------
+Accessible at: `/admin/` (requires Django admin user)
+
+Key models and admin actions:
+- Jobs (`jobs.Job`):
+  - List display includes Title (truncated), Company (links to CompanyMapping if exists), operation type, country, posted_date, status, senior flag.
+  - Inline editable fields: `operation_type`, `country_code`, `status`.
+  - Actions:
+    - Export Selected to CSV — exports all model fields for selected jobs
+    - Mark selected jobs as reviewed — sets `last_checked` timestamp to now (proxy for review)
+    - Create CompanyMapping from selected Jobs — auto-creates mapping records computed from job.company
+- CompanyMapping (`jobs.CompanyMapping`):
+  - List editable fields: `operation_type`, `country_code`
+  - Action: Export mappings to CSV
+- Resumes (`resumes.Resume`):
+  - Actions: Export selected resumes as JSON
+  - Action: Mark selected resumes as parsed (sets `parsed_at` to now)
+
+
+MANAGEMENT COMMANDS (for Airflow integration)
+-------------------------------------------
+- `python manage.py ingest_from_dir --dir /path/to/jsons [--source NAME] [--delete-after]`
+  - Description: Read `.json` files from the specified directory. Each file may contain a single job object or an array of job objects. The command will ingest each payload using the same logic as `/api/jobs/ingest` (dedupe/upsert heuristics).
+  - Options:
+    - `--dir` (required): directory containing `.json` files
+    - `--source` (optional): source name to attach to created Job records (default `airflow`)
+    - `--delete-after` (flag): delete processed files after successful ingestion
+  - Example:
+    python manage.py ingest_from_dir --dir /data/job_exports --source mycrawler --delete-after
+
+
+ERRORS AND STATUS CODES
+-----------------------
+- 200 OK: Most successful responses.
+- 201 not used (created responses are returned with 200 and a JSON status field).
+- 400 Bad Request: Validation errors for malformed input (file missing, invalid JSON, unsupported file type).
+- 401 Unauthorized: Missing or invalid `Authorization: Bearer` token for protected endpoints.
+- 404 Not Found: Resource doesn't exist (resume or job not found when accessing detail or download).
+- 500 Server Error: Unexpected server-side exception (should be rare; check server logs).
+
+
+IMPLEMENTATION NOTES
+--------------------
+- All API JSON endpoints are implemented with Django-Ninja and mounted under `/api/`.
+- Jobs deduplication strategy:
+  1) Upsert by exact `url` (unique index).
+  2) Fallback: fuzzy/exact title + company + posted_date matching via `jobs.utils.is_duplicate`.
+  3) If duplicate found, existing record is updated and API returns `dedup-updated`.
+- Company auto-classification: if `operation_type` is missing, `jobs.utils.classify_company_by_name` is used to guess the operation type from company name.
+- Raw JSON for jobs/resumes is stored in JSONField columns for later analysis.
+
+
+ENVIRONMENT / CONFIGURATION
+---------------------------
+- Place runtime config in the project `.env` (project root). Key variables:
+  - `ADMIN_API_KEY` — Bearer token for admin/protected endpoints
+  - `DB_USE_POSTGRES`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` — DB configuration
+  - `SECRET_KEY`, `DEBUG`, `ALLOWED_HOSTS`
+
+
+CONTACT / NEXT STEPS
+--------------------
+- If you want formal OpenAPI (swagger) documentation, Django-Ninja exposes OpenAPI JSON under `/api/docs/` (if Ninja's docs are enabled). I can also generate a Markdown or Postman collection for these endpoints.
+- I can add request/response JSON schema examples for each endpoint if you want a machine-readable spec (OpenAPI / Postman / Insomnia).
+
+-- End of documentation --

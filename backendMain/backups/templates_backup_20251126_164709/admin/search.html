@@ -1,0 +1,77 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Search" %} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></h1>
+{% endblock %}
+
+{% block content %}
+<div style="padding: 40px; max-width: 800px; margin: 0 auto;">
+    <h1 style="color: #0EA5E9; margin-bottom: 30px;">🔍 Admin Search</h1>
+    
+    <form method="get" action="{% url 'search' %}" style="margin-bottom: 30px;">
+        <div style="display: flex; gap: 10px;">
+            <input 
+                type="text" 
+                name="q" 
+                value="{{ query }}" 
+                placeholder="Search across all models..."
+                style="flex: 1; padding: 12px 20px; border: 2px solid #0EA5E9; border-radius: 8px; font-size: 16px;"
+                autofocus
+            >
+            <button 
+                type="submit"
+                style="padding: 12px 30px; background: linear-gradient(135deg, #0EA5E9 0%, #1E3A8A 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;"
+            >
+                Search
+            </button>
+        </div>
+    </form>
+    
+    {% if query %}
+    <div style="background: #F8FAFC; padding: 30px; border-radius: 12px; border: 2px solid #E0F2FE;">
+        <h2 style="color: #1E3A8A; margin-bottom: 20px;">Search Results for "{{ query }}"</h2>
+        <p style="color: #64748B; font-size: 16px;">
+            This is a placeholder search page. Advanced search functionality will be implemented soon.
+        </p>
+        <p style="color: #64748B; margin-top: 15px;">
+            💡 <strong>Tip:</strong> Use the navigation sidebar to browse different models directly.
+        </p>
+    </div>
+    {% else %}
+    <div style="background: #F8FAFC; padding: 30px; border-radius: 12px; border: 2px solid #E0F2FE; text-align: center;">
+        <p style="color: #64748B; font-size: 18px;">
+            Enter a search term to find records across all models.
+        </p>
+    </div>
+    {% endif %}
+    
+    <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%); border-radius: 12px; border-left: 4px solid #0EA5E9;">
+        <h3 style="color: #1E40AF; margin-bottom: 15px;">Quick Links</h3>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: 10px;">
+                <a href="{% url 'admin:jobs_job_changelist' %}" style="color: #0EA5E9; font-weight: 600; text-decoration: none;">
+                    ✈️ Jobs
+                </a>
+            </li>
+            <li style="margin-bottom: 10px;">
+                <a href="{% url 'admin:users_customuser_changelist' %}" style="color: #0EA5E9; font-weight: 600; text-decoration: none;">
+                    👥 Users
+                </a>
+            </li>
+            <li style="margin-bottom: 10px;">
+                <a href="{% url 'admin:jobs_jobapplication_changelist' %}" style="color: #0EA5E9; font-weight: 600; text-decoration: none;">
+                    📋 Applications
+                </a>
+            </li>
+            <li style="margin-bottom: 10px;">
+                <a href="{% url 'admin:resumes_resume_changelist' %}" style="color: #0EA5E9; font-weight: 600; text-decoration: none;">
+                    📄 Resumes
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

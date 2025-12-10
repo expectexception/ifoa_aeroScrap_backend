@@ -1,0 +1,113 @@
+<!-- BLOCKED SNIPPET: URL=https://www.aviationjobsearch.com/en-GB/jobs -->
+<!DOCTYPE html><html lang="en-GB"><head>
+    <!-- GTM Slot start -->
+    <!-- Preconnect Start -->
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<!-- Preconnect End -->
+<!-- Facebook Verification -->
+<meta name="facebook-domain-verification" content="etgbnuv0bt9qundsyy8yhbkv99smda">
+<meta name="google-site-verification" content="_y6uulyLUBceXBOl_5LsclAFkZBhOv1El1hlIMER8Io">
+<!-- paste as high in the <head> of the page as possible -->
+<!-- Google Tag Manager -->
+<script type="text/javascript" async="" src="https://www.clarity.ms/tag/mjic44bkjf?ref=gtm"></script><script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=G-BY30H9VW43&amp;cx=c&amp;gtm=4e5bj1"></script><script async="" src="https://www.clarity.ms/tag/o1ypz55wh6"></script><script async="" src="https://www.googletagmanager.com/gtm.js?id=GTM-K7HRTCS"></script><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K7HRTCS');</script>
+<!-- End Google Tag Manager -->
+
+<!-- Start Google Tag Manager - AJAX Script -->
+<script id="gtm-jq-ajax-listen" type="text/javascript">
+var lastAjaxGTMData = null;
+(function() {
+
+    'use strict';
+    var $;
+    var n = 0;
+    docReady(bindGTMToAjax);
+})();
+
+function docReady(fn) {
+    // see if DOM is already available
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+        // call on next available tick
+        setTimeout(fn, 1);
+    } else {
+        document.addEventListener("DOMContentLoaded", fn);
+    }
+}
+
+function bindGTMToAjax() {
+
+    $(document).bind('ajaxComplete', function(evt, jqXhr, opts) {
+
+        // Create a fake a element for magically simple URL parsing
+        var fullUrl = document.createElement('a');
+        fullUrl.href = opts.url;
+
+        // IE9+ strips the leading slash from a.pathname because who wants to get home on time Friday anyways
+        var pathname = fullUrl.pathname[0] === '/' ? fullUrl.pathname : '/' + fullUrl.pathname;
+        // Manually remove the leading question mark, if there is one
+        var queryString = fullUrl.search[0] === '?' ? fullUrl.search.slice(1) : fullUrl.search;
+        // Turn our params and headers into objects for easier reference
+        var queryParameters = objMap(queryString, '&', '=', true);
+        var headers = objMap(jqXhr.getAllResponseHeaders(), '\n', ':');
+
+        var url = fullUrl.href;
+        var is_api_call = fullUrl.href.lastIndexOf('/api/') >= 0 ? 1 : 0;
+
+        var is_ignore_url = 0;
+        var is_ignore_event = 0;
+        var current_web_url = evt.target ? evt.target.URL : evt.currentTarget.URL;
+
+        var webQueryString = current_web_url.indexOf('?') >= 0 ? current_web_url.slice(current_web_url.indexOf('?') + 1) : '';
+        // Turn our params and headers into objects for easier reference
+        var webQueryParameters = objMap(webQueryString, '&', '=', true);
+
+        $.each(_gtmIgnoreUrls(), function (index, ignoreUrl) {
+            if (url.indexOf(ignoreUrl) >= 0) {
+                is_ignore_url = 1;
+            }
+        });
+        $.each(_gtmIgnoreEvents(), function (index, ignoreEvent) {
+            if (url.indexOf(ignoreEvent) >= 0) {
+                is_ignore_event = 1;
+            }
+        });
+
+        // Blindly push to the dataLayer because this fires within GTM
+        dataLayer.push({
+            'event': 'ajaxComplete',
+            'attributes': {
+                // Return empty strings to prevent accidental inheritance of old data
+                'type': opts.type || '',
+                'is': {
+                    'api': is_api_call,
+                    'ignore_url': is_ignore_url,
+                    'ignore_event': is_ignore_event
+                },
+                'web': {
+                    "url": current_web_url,
+                    "title": evt.target.title,
+                    "query_parameters": webQueryParameters
+                },
+                'ajax': {
+                    'url': url || '',
+                    'query_parameters': queryParameters,
+                    'path': pathname || ''
+                },
+                'hostname': fullUrl.hostname || '',
+                'protocol': fullUrl.protocol || '',
+                'fragment': fullUrl.hash || '',
+                'statusCode': jqXhr.status || '',
+                'statusText': jqXhr.statusText || '',
+                'headers': headers,
+                'timestamp': evt.timeStamp || '',
+                'contentType': opts.contentType || '',
+                // Defer to jQuery's handling of the response
+                'response': (jqXhr.responseJSON || jqXhr.responseXML || jqXhr.responseText || '')
+            }
+        });
+
+		lastAjaxGTMData = dataLayer[dataLayer.length - 1]
+    });

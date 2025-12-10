@@ -1,0 +1,546 @@
+/* ============================================================================
+   CUSTOM UNFOLD THEME - AVIATION STYLE DARK MODE
+   ============================================================================ */
+
+:root {
+    --aviation-primary: #0EA5E9;
+    --aviation-navy: #1E3A8A;
+    --aviation-orange: #F97316;
+    --aviation-green: #10B981;
+    
+    /* Force dark theme colors */
+    --bg-dark: #0F172A;
+    --bg-darker: #020617;
+    --bg-light: #1E293B;
+    --text-primary: #F8FAFC;
+    --text-secondary: #E2E8F0;
+    --border-dark: rgba(14, 165, 233, 0.2);
+}
+
+/* Force dark theme on body */
+body {
+    background: var(--bg-darker) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Force dark theme on all backgrounds */
+.bg-white {
+    background: var(--bg-light) !important;
+}
+
+.bg-gray-50 {
+    background: var(--bg-dark) !important;
+}
+
+.bg-gray-100 {
+    background: var(--bg-light) !important;
+}
+
+/* Fix changelist layout to prevent filter overlap */
+#changelist {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+#changelist .results {
+    flex: 1;
+    min-width: 0;
+}
+
+#changelist-filter {
+    width: 280px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    background: var(--bg-light) !important;
+    border: 2px solid var(--aviation-primary) !important;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 16px rgba(14, 165, 233, 0.2);
+}
+
+/* Ensure content doesn't get hidden */
+#content-main {
+    background: var(--bg-dark) !important;
+    padding: 24px !important;
+    min-height: calc(100vh - 100px);
+}
+
+/* Enhanced header with aviation gradient */
+.bg-primary-600 {
+    background: linear-gradient(135deg, var(--aviation-navy) 0%, var(--aviation-primary) 100%) !important;
+}
+
+/* Sidebar enhancements */
+.sidebar-navigation a {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-navigation a:hover {
+    transform: translateX(4px);
+    background: rgba(14, 165, 233, 0.1) !important;
+}
+
+/* Card enhancements */
+.bg-white.dark\:bg-gray-900 {
+    box-shadow: 0 4px 16px rgba(14, 165, 233, 0.1);
+    border: 1px solid rgba(14, 165, 233, 0.1);
+    transition: all 0.3s ease;
+}
+
+.bg-white.dark\:bg-gray-900:hover {
+    box-shadow: 0 8px 24px rgba(14, 165, 233, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Button enhancements */
+.bg-primary-600 {
+    background: linear-gradient(135deg, var(--aviation-primary) 0%, var(--aviation-navy) 100%) !important;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.bg-primary-600:hover {
+    border-color: var(--aviation-orange);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.3);
+}
+
+/* Badge styling */
+.badge {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Success badge */
+.badge-success {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: white;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+}
+
+/* Warning badge */
+.badge-warning {
+    background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+    color: white;
+    box-shadow: 0 2px 6px rgba(249, 115, 22, 0.3);
+}
+
+/* Danger badge */
+.badge-danger {
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    color: white;
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+}
+
+/* Info badge */
+.badge-info {
+    background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%);
+    color: white;
+    box-shadow: 0 2px 6px rgba(14, 165, 233, 0.3);
+}
+
+/* Table enhancements with dark theme */
+table, .results table {
+    width: 100%;
+    background: var(--bg-light) !important;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid var(--border-dark);
+}
+
+table thead th, .results thead th {
+    background: linear-gradient(135deg, var(--aviation-navy) 0%, var(--aviation-primary) 100%) !important;
+    color: white !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 3px solid var(--aviation-orange) !important;
+    padding: 14px 12px !important;
+    white-space: nowrap;
+}
+
+table tbody tr, .results tbody tr {
+    transition: all 0.2s ease;
+    background: var(--bg-light) !important;
+}
+
+table tbody tr:nth-child(even), .results tbody tr:nth-child(even) {
+    background: var(--bg-dark) !important;
+}
+
+table tbody tr:hover, .results tbody tr:hover {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.2) 0%, rgba(56, 189, 248, 0.15) 100%) !important;
+    transform: scale(1.001);
+    box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
+}
+
+table tbody td, .results tbody td {
+    color: var(--text-primary) !important;
+    padding: 12px !important;
+    border-bottom: 1px solid var(--border-dark) !important;
+}
+
+/* Form field enhancements */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea,
+select {
+    border: 2px solid rgba(14, 165, 233, 0.2);
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--aviation-primary);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+}
+
+/* Dashboard stats cards */
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 2px solid rgba(14, 165, 233, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--aviation-primary), var(--aviation-orange));
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(14, 165, 233, 0.15);
+    border-color: var(--aviation-primary);
+}
+
+.stat-value {
+    font-size: 36px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--aviation-primary) 0%, var(--aviation-navy) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 12px 0;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+/* Animation for loading */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.loading {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Responsive improvements */
+@media (max-width: 1024px) {
+    #changelist {
+        flex-direction: column;
+    }
+    
+    #changelist-filter {
+        width: 100%;
+        position: relative;
+        top: 0;
+        max-height: none;
+        margin-bottom: 20px;
+    }
+    
+    #changelist .results {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .stat-card {
+        padding: 16px;
+    }
+    
+    .stat-value {
+        font-size: 28px;
+    }
+    
+    table thead th, .results thead th {
+        font-size: 11px;
+        padding: 10px 8px !important;
+    }
+    
+    table tbody td, .results tbody td {
+        font-size: 13px;
+        padding: 10px 8px !important;
+    }
+}
+
+/* Dark mode enhancements */
+.dark .stat-card {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    border-color: rgba(14, 165, 233, 0.3);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.dark .stat-card:hover {
+    border-color: var(--aviation-primary);
+    box-shadow: 0 8px 32px rgba(14, 165, 233, 0.3);
+}
+
+.dark table tbody tr:hover {
+    background: rgba(14, 165, 233, 0.15) !important;
+}
+
+.dark table thead th {
+    background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%) !important;
+}
+
+/* Dark mode form fields */
+.dark input[type="text"],
+.dark input[type="email"],
+.dark input[type="password"],
+.dark input[type="number"],
+.dark textarea,
+.dark select {
+    background: #1E293B;
+    border-color: rgba(14, 165, 233, 0.3);
+    color: #F8FAFC;
+}
+
+.dark input[type="text"]:focus,
+.dark input[type="email"]:focus,
+.dark input[type="password"]:focus,
+.dark input[type="number"]:focus,
+.dark textarea:focus,
+.dark select:focus {
+    background: #0F172A;
+    border-color: var(--aviation-primary);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+}
+
+/* Dark mode breadcrumbs */
+.dark .breadcrumbs {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    border-bottom-color: var(--aviation-primary);
+}
+
+/* Dark mode cards */
+.dark .bg-white {
+    background: #1E293B !important;
+}
+
+/* Dark mode sidebar */
+.dark .sidebar-navigation {
+    background: #0F172A;
+}
+
+.dark .sidebar-navigation a:hover {
+    background: rgba(14, 165, 233, 0.2) !important;
+}
+
+/* Dark mode buttons - enhanced */
+.dark .bg-primary-600 {
+    background: linear-gradient(135deg, #0EA5E9 0%, #1E3A8A 100%) !important;
+    box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
+}
+
+.dark .bg-primary-600:hover {
+    background: linear-gradient(135deg, #38BDF8 0%, #0EA5E9 100%) !important;
+    box-shadow: 0 6px 24px rgba(14, 165, 233, 0.6);
+}
+
+/* Dark mode text */
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    color: #F8FAFC;
+}
+
+.dark p, .dark span, .dark label {
+    color: #E2E8F0;
+}
+
+/* Dark mode filter panel */
+.dark #changelist-filter {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    border-color: rgba(14, 165, 233, 0.3);
+}
+
+/* Dark mode content area */
+.dark #content-main {
+    background: #0F172A !important;
+}
+
+.dark #content {
+    background: #020617 !important;
+}
+
+/* Dark mode messages - enhanced visibility */
+.dark .messagelist .success {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.15) 100%);
+    border-left-color: var(--aviation-green);
+    color: #6EE7B7;
+}
+
+.dark .messagelist .error {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.15) 100%);
+    border-left-color: var(--aviation-red);
+    color: #FCA5A5;
+}
+
+.dark .messagelist .warning {
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(234, 88, 12, 0.15) 100%);
+    border-left-color: var(--aviation-orange);
+    color: #FED7AA;
+}
+
+.dark .messagelist .info {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.2) 0%, rgba(2, 132, 199, 0.15) 100%);
+    border-left-color: var(--aviation-primary);
+    color: #7DD3FC;
+}
+
+/* Dark mode search page */
+.dark .search-container {
+    background: #1E293B;
+    color: #F8FAFC;
+}
+
+/* Dark mode module headers */
+.dark .module h2, .dark .module caption {
+    background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%) !important;
+}
+
+/* Improve readability in dark mode */
+.dark td, .dark th {
+    border-color: rgba(14, 165, 233, 0.1) !important;
+}
+
+/* Dark mode action buttons */
+.dark #changelist-form .actions {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
+    border-color: rgba(14, 165, 233, 0.3) !important;
+}
+
+.dark #changelist-form .actions select {
+    background: #0F172A !important;
+    color: #F8FAFC !important;
+}
+
+/* Dark mode search bar */
+.dark #changelist-search {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
+}
+
+.dark #searchbar {
+    background: #0F172A !important;
+    color: #F8FAFC !important;
+}
+
+/* Success message styling */
+.messagelist .success {
+    background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+    border-left: 4px solid var(--aviation-green);
+    color: #065F46;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+/* Error message styling */
+.messagelist .error {
+    background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+    border-left: 4px solid #EF4444;
+    color: #991B1B;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+/* Warning message styling */
+.messagelist .warning {
+    background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+    border-left: 4px solid var(--aviation-orange);
+    color: #92400E;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+/* Info message styling */
+.messagelist .info {
+    background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+    border-left: 4px solid var(--aviation-primary);
+    color: #1E40AF;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+/* Add animation to messages */
+.messagelist li {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Breadcrumb enhancement with dark theme */
+.breadcrumbs {
+    padding: 12px 20px;
+    background: var(--bg-light) !important;
+    border-bottom: 2px solid var(--aviation-primary);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(14, 165, 233, 0.2);
+}
+
+.breadcrumbs a {
+    color: var(--aviation-primary);
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.breadcrumbs a:hover {
+    color: var(--aviation-navy);
+    text-decoration: none;
+}

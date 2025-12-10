@@ -1,0 +1,16 @@
+[INFO] 2025-11-24 06:06:15 [jobs] auth_views.login_view:69 - User logged in: admin
+[INFO] 2025-11-24 06:06:25 [jobs] auth_views.login_view:69 - User logged in: admin
+[INFO] 2025-11-24 06:19:38 [jobs] auth_views.login_view:69 - User logged in: scraper_test_user
+[INFO] 2025-11-24 06:19:46 [jobs] auth_views.login_view:69 - User logged in: admin
+[INFO] 2025-11-24 06:19:57 [jobs] auth_views.login_view:69 - User logged in: admin
+[INFO] 2025-11-24 06:20:15 [jobs] auth_views.login_view:69 - User logged in: admin
+[INFO] 2025-11-24 06:20:25 [jobs] auth_views.login_view:69 - User logged in: admin
+[INFO] 2025-11-24 06:20:25 [jobs] auth_views.list_users_view:208 - Admin admin listed all users
+[INFO] 2025-11-24 06:21:03 [jobs] auth_views.login_view:69 - User logged in: admin
+[INFO] 2025-11-24 06:21:03 [jobs] auth_views.list_users_view:208 - Admin admin listed all users
+[INFO] 2025-11-24 06:21:36 [jobs] auth_views.login_view:69 - User logged in: admin
+[INFO] 2025-11-24 06:21:36 [jobs] auth_views.list_users_view:208 - Admin admin listed all users
+[INFO] 2025-11-24 06:22:50 [jobs] auth_views.login_view:69 - User logged in: admin
+[INFO] 2025-11-24 06:22:50 [jobs] auth_views.list_users_view:208 - Admin admin listed all users
+[INFO] 2025-11-24 06:23:49 [jobs] auth_views.login_view:69 - User logged in: admin
+[INFO] 2025-11-24 06:23:49 [jobs] auth_views.list_users_view:208 - Admin admin listed all users

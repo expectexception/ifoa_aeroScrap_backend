@@ -1,0 +1,716 @@
+/* Enhanced Admin Panel Styling - Modern Color Scheme */
+/* Aviation-themed professional color palette */
+
+/* Main content area background fix */
+body.change-list #content,
+body.change-form #content,
+#content-main {
+    background: #FFFFFF !important;
+    padding: 24px !important;
+    border-radius: 14px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
+}
+
+#content {
+    background: #F8FAFC !important;
+}
+
+:root {
+    /* Primary Colors - Sky Blue Theme */
+    --aviation-primary: #0EA5E9;
+    --aviation-primary-dark: #0284C7;
+    --aviation-primary-light: #38BDF8;
+    
+    /* Secondary Colors - Navy & Slate */
+    --aviation-navy: #1E3A8A;
+    --aviation-slate: #475569;
+    --aviation-slate-light: #64748B;
+    
+    /* Accent Colors */
+    --aviation-orange: #F97316;
+    --aviation-green: #10B981;
+    --aviation-red: #EF4444;
+    --aviation-yellow: #F59E0B;
+    
+    /* Neutral Colors */
+    --bg-white: #FFFFFF;
+    --bg-light: #F8FAFC;
+    --bg-lighter: #F1F5F9;
+    --border-color: #E2E8F0;
+    --text-dark: #0F172A;
+    --text-medium: #334155;
+    --text-light: #64748B;
+}
+
+/* Tooltip improvements */
+[title] {
+    position: relative;
+    cursor: help;
+}
+
+.tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip-wrapper .tooltip-text {
+    visibility: hidden;
+    min-width: 220px;
+    background: linear-gradient(135deg, var(--aviation-navy) 0%, var(--aviation-primary-dark) 100%);
+    color: #FFFFFF;
+    text-align: center;
+    border-radius: 10px;
+    padding: 12px 16px;
+    position: absolute;
+    z-index: 9999;
+    bottom: 130%;
+    left: 50%;
+    margin-left: -110px;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 10px 25px rgba(14, 165, 233, 0.3);
+    line-height: 1.5;
+}
+
+.tooltip-wrapper .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -8px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: var(--aviation-primary-dark) transparent transparent transparent;
+}
+
+.tooltip-wrapper:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    bottom: 125%;
+}
+
+/* Enhanced table styling with better contrast */
+#result_list td {
+    background-color: var(--bg-white) !important;
+    color: var(--text-dark) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    padding: 12px 14px !important;
+    transition: all 0.2s ease !important;
+}
+
+#result_list tbody tr:nth-child(even) td {
+    background-color: var(--bg-lighter) !important;
+}
+
+#result_list tbody tr:hover td {
+    background-color: #E0F2FE !important;
+    color: var(--aviation-navy) !important;
+    transform: scale(1.001);
+    box-shadow: 0 2px 8px rgba(14, 165, 233, 0.15) !important;
+}
+
+/* Enhanced Status badges with distinct colors */
+.status-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.status-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.status-badge.success {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: #FFFFFF;
+    border-color: #047857;
+    box-shadow: 0 3px 8px rgba(16, 185, 129, 0.35);
+}
+
+.status-badge.danger {
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    color: #FFFFFF;
+    border-color: #B91C1C;
+    box-shadow: 0 3px 8px rgba(239, 68, 68, 0.35);
+}
+
+.status-badge.warning {
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+    color: #FFFFFF;
+    border-color: #B45309;
+    box-shadow: 0 3px 8px rgba(245, 158, 11, 0.35);
+}
+
+.status-badge.info {
+    background: linear-gradient(135deg, var(--aviation-primary) 0%, var(--aviation-primary-dark) 100%);
+    color: #FFFFFF;
+    border-color: #0369A1;
+    box-shadow: 0 3px 8px rgba(14, 165, 233, 0.35);
+}
+
+.status-badge.pending {
+    background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+    color: #FFFFFF;
+    border-color: #6D28D9;
+    box-shadow: 0 3px 8px rgba(139, 92, 246, 0.35);
+}
+
+.status-badge.neutral {
+    background: linear-gradient(135deg, #94A3B8 0%, #64748B 100%);
+    color: #FFFFFF;
+    border-color: #475569;
+    box-shadow: 0 3px 8px rgba(100, 116, 139, 0.35);
+}
+
+/* Enhanced inline text with better visibility */
+span[style*="color: white"],
+span[style*="color: #fff"],
+span[style*="color: #ffffff"] {
+    background: linear-gradient(135deg, var(--aviation-primary) 0%, var(--aviation-primary-dark) 100%) !important;
+    color: #FFFFFF !important;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(14, 165, 233, 0.25);
+    display: inline-block;
+}
+
+/* Enhanced links with aviation theme */
+#result_list a {
+    color: var(--aviation-primary) !important;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    position: relative;
+    border-bottom: 2px solid transparent;
+}
+
+#result_list a:hover {
+    color: var(--aviation-navy) !important;
+    border-bottom-color: var(--aviation-orange);
+    transform: translateX(2px);
+}
+
+#result_list a:active {
+    color: var(--aviation-primary-dark) !important;
+}
+
+/* Enhanced details box with aviation theme */
+.job-details-box,
+.application-details-box,
+.candidate-details-box {
+    background: linear-gradient(135deg, var(--bg-white) 0%, var(--bg-light) 100%);
+    border: 3px solid var(--aviation-primary-light);
+    border-radius: 16px;
+    padding: 24px;
+    margin: 20px 0;
+    box-shadow: 0 8px 20px rgba(14, 165, 233, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.job-details-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--aviation-primary) 0%, var(--aviation-orange) 50%, var(--aviation-green) 100%);
+}
+
+.job-details-box h3 {
+    color: var(--aviation-navy);
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 20px;
+    font-weight: 700;
+    border-bottom: 3px solid var(--aviation-primary);
+    padding-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.job-details-box table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 6px;
+}
+
+.job-details-box table td {
+    padding: 14px;
+    background: var(--bg-white);
+    border-radius: 6px;
+}
+
+.job-details-box table tr {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.job-details-box table td:first-child {
+    font-weight: 700;
+    color: var(--aviation-navy);
+    width: 35%;
+    background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);
+}
+
+.job-details-box table td:last-child {
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+/* Enhanced action buttons with aviation theme */
+.button, input[type=submit], input[type=button], .submit-row input, button {
+    background: linear-gradient(135deg, var(--aviation-primary) 0%, var(--aviation-primary-dark) 100%) !important;
+    color: #FFFFFF !important;
+    border: 2px solid transparent !important;
+    padding: 11px 24px !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3) !important;
+    cursor: pointer !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.button:hover, input[type=submit]:hover, input[type=button]:hover {
+    background: linear-gradient(135deg, var(--aviation-navy) 0%, var(--aviation-primary-dark) 100%) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 24px rgba(14, 165, 233, 0.45) !important;
+    color: #FFFFFF !important;
+    border-color: var(--aviation-orange) !important;
+}
+
+.button:active, input[type=submit]:active, input[type=button]:active {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3) !important;
+}
+
+.button.default, .default {
+    background: linear-gradient(135deg, var(--aviation-slate) 0%, var(--aviation-slate-light) 100%) !important;
+    box-shadow: 0 4px 12px rgba(100, 116, 139, 0.25) !important;
+}
+
+.button.default:hover {
+    background: linear-gradient(135deg, var(--text-medium) 0%, var(--aviation-slate) 100%) !important;
+    box-shadow: 0 8px 20px rgba(100, 116, 139, 0.4) !important;
+}
+
+/* Delete button variant */
+.button.deletelink, a.deletelink {
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%) !important;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
+}
+
+.button.deletelink:hover, a.deletelink:hover {
+    background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%) !important;
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.45) !important;
+}
+
+/* Improve changeform rows */
+.form-row {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+}
+
+.form-row:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+/* Better contrast for help text */
+.help, .helptext {
+    color: #64748b !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+}
+
+/* Enhanced module headers with aviation gradient */
+.module h2, .module caption, .inline-group h2 {
+    background: linear-gradient(135deg, var(--aviation-navy) 0%, var(--aviation-primary) 100%) !important;
+    color: #FFFFFF !important;
+    border-radius: 10px 10px 0 0 !important;
+    padding: 16px 20px !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    letter-spacing: 0.3px !important;
+    box-shadow: 0 2px 8px rgba(14, 165, 233, 0.2) !important;
+    border-bottom: 3px solid var(--aviation-orange) !important;
+}
+
+/* Enhanced filters sidebar with aviation styling */
+#changelist-filter {
+    background: linear-gradient(135deg, var(--bg-white) 0%, var(--bg-light) 100%);
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 4px 16px rgba(14, 165, 233, 0.1);
+    border: 2px solid var(--aviation-primary-light);
+}
+
+#changelist-filter h2 {
+    background: linear-gradient(135deg, var(--aviation-primary) 0%, var(--aviation-primary-dark) 100%);
+    color: #FFFFFF;
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    box-shadow: 0 3px 10px rgba(14, 165, 233, 0.3);
+}
+
+#changelist-filter h3 {
+    color: var(--aviation-navy);
+    font-weight: 700;
+    margin-top: 24px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--aviation-primary-light);
+}
+
+#changelist-filter ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+#changelist-filter li {
+    padding: 10px 14px;
+    margin-bottom: 6px;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+    border: 1px solid transparent;
+}
+
+#changelist-filter li:hover {
+    background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);
+    border-color: var(--aviation-primary-light);
+    transform: translateX(4px);
+}
+
+#changelist-filter li.selected {
+    background: linear-gradient(135deg, var(--aviation-primary) 0%, var(--aviation-primary-dark) 100%);
+    font-weight: 600;
+    border-color: var(--aviation-navy);
+    box-shadow: 0 3px 8px rgba(14, 165, 233, 0.3);
+}
+
+#changelist-filter a {
+    color: var(--aviation-slate);
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+#changelist-filter li:hover a {
+    color: var(--aviation-navy);
+}
+
+#changelist-filter li.selected a {
+    color: #FFFFFF;
+}
+
+/* Enhanced pagination with aviation theme */
+.paginator {
+    padding: 18px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.paginator a, .paginator span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 600;
+    font-size: 14px;
+    border: 2px solid transparent;
+}
+
+.paginator a {
+    background: linear-gradient(135deg, var(--bg-lighter) 0%, var(--bg-light) 100%);
+    color: var(--aviation-navy);
+    text-decoration: none;
+    border-color: var(--border-color);
+}
+
+.paginator a:hover {
+    background: linear-gradient(135deg, var(--aviation-primary) 0%, var(--aviation-primary-dark) 100%);
+    color: #FFFFFF;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(14, 165, 233, 0.35);
+    border-color: var(--aviation-orange);
+}
+
+.paginator .this-page {
+    background: linear-gradient(135deg, var(--aviation-navy) 0%, var(--aviation-primary) 100%);
+    color: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
+    border-color: var(--aviation-orange);
+}
+
+.paginator .end {
+    margin: 0 4px;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+/* Improve search bar */
+#changelist-search input[type="text"] {
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.2s ease;
+    width: 300px;
+}
+
+#changelist-search input[type="text"]:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+/* Enhanced messages with better contrast and icons */
+.messagelist {
+    margin: 0;
+    padding: 0;
+}
+
+.messagelist li {
+    margin-bottom: 16px;
+    padding: 18px 24px;
+    border-radius: 12px;
+    border-left: 5px solid;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative;
+    padding-left: 54px;
+}
+
+.messagelist li::before {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.messagelist .success {
+    background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+    border-color: var(--aviation-green);
+    color: #065F46;
+}
+
+.messagelist .success::before {
+    content: '✓';
+    background: var(--aviation-green);
+    color: #FFFFFF;
+}
+
+.messagelist .error {
+    background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+    border-color: var(--aviation-red);
+    color: #991B1B;
+}
+
+.messagelist .error::before {
+    content: '✕';
+    background: var(--aviation-red);
+    color: #FFFFFF;
+}
+
+.messagelist .warning {
+    background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+    border-color: var(--aviation-yellow);
+    color: #92400E;
+}
+
+.messagelist .warning::before {
+    content: '⚠';
+    background: var(--aviation-yellow);
+    color: #FFFFFF;
+}
+
+.messagelist .info {
+    background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);
+    border-color: var(--aviation-primary);
+    color: var(--aviation-navy);
+}
+
+.messagelist .info::before {
+    content: 'ℹ';
+    background: var(--aviation-primary);
+    color: #FFFFFF;
+}
+
+/* Fix custom filter panel and sidebar elements */
+.module h2, .module caption {
+    background: linear-gradient(135deg, var(--aviation-navy) 0%, var(--aviation-primary) 100%) !important;
+    color: #FFFFFF !important;
+    border-bottom: 3px solid var(--aviation-orange) !important;
+    padding: 14px 20px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.8px !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Fix dark sidebar panels */
+.sidebar-module h2,
+.sidebar-module h3,
+aside h2,
+aside h3 {
+    background: linear-gradient(135deg, var(--aviation-navy) 0%, var(--aviation-primary) 100%) !important;
+    color: #FFFFFF !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    margin-bottom: 14px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px !important;
+    box-shadow: 0 3px 10px rgba(14, 165, 233, 0.25) !important;
+}
+
+/* Fix filter sidebar background */
+.sidebar-module,
+aside,
+#changelist-filter {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%) !important;
+    border: 2px solid var(--aviation-primary-light) !important;
+    border-radius: 14px !important;
+    padding: 20px !important;
+    box-shadow: 0 4px 16px rgba(14, 165, 233, 0.12) !important;
+}
+
+/* Ensure all text in sidebar is visible */
+.sidebar-module a,
+.sidebar-module p,
+.sidebar-module li,
+aside a,
+aside p,
+aside li {
+    color: var(--text-dark) !important;
+}
+
+.sidebar-module a:hover,
+aside a:hover {
+    color: var(--aviation-primary) !important;
+    background: rgba(14, 165, 233, 0.1) !important;
+    padding: 4px 8px !important;
+    border-radius: 6px !important;
+}
+
+/* Fix action dropdown and search */
+#changelist-form .actions {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%) !important;
+    border: 2px solid var(--aviation-primary-light) !important;
+    border-radius: 12px !important;
+    padding: 16px 20px !important;
+    margin-bottom: 20px !important;
+    box-shadow: 0 3px 12px rgba(14, 165, 233, 0.1) !important;
+}
+
+#changelist-form .actions select {
+    background: #FFFFFF !important;
+    border: 2px solid var(--aviation-primary-light) !important;
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
+    color: var(--text-dark) !important;
+    font-weight: 500 !important;
+}
+
+#changelist-form .actions label {
+    color: var(--aviation-navy) !important;
+    font-weight: 600 !important;
+    margin-right: 10px !important;
+}
+
+/* Fix search bar */
+#changelist-search {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%) !important;
+    border: 2px solid var(--aviation-primary-light) !important;
+    border-radius: 12px !important;
+    padding: 14px 18px !important;
+    box-shadow: 0 3px 12px rgba(14, 165, 233, 0.1) !important;
+}
+
+#searchbar {
+    background: #FFFFFF !important;
+    border: 2px solid var(--aviation-primary-light) !important;
+    border-radius: 8px !important;
+    padding: 10px 16px !important;
+    color: var(--text-dark) !important;
+    font-size: 14px !important;
+}
+
+#searchbar:focus {
+    outline: none !important;
+    border-color: var(--aviation-primary) !important;
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15) !important;
+}
+
+/* Fix warning message banner */
+.messagelist li.warning,
+div[class*="warning"] {
+    background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%) !important;
+    border-left: 5px solid var(--aviation-orange) !important;
+    color: #92400E !important;
+}
+
+/* Ensure table text is always visible */
+table th,
+table td,
+.results th,
+.results td {
+    color: var(--text-dark) !important;
+}
+
+table thead th {
+    background: linear-gradient(135deg, var(--aviation-navy) 0%, var(--aviation-primary) 100%) !important;
+    color: #FFFFFF !important;
+    border-bottom: 3px solid var(--aviation-orange) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .scraper-grid {
+        grid-template-columns: 1fr !important;
+    }
+}

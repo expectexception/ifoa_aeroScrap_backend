@@ -1,0 +1,5 @@
+[INFO] 2025-11-24 10:45:05 [SCRAPER:scraper_manager.linkedin] === SCRAPER EXECUTION START === Job ID: 27
+[INFO] 2025-11-24 10:45:05 [SCRAPER:scraper_manager.linkedin] Parameters: max_pages=None, max_jobs=3
+[INFO] 2025-11-24 10:46:04 [SCRAPER:scraper_manager.linkedin] === SCRAPER EXECUTION END === Job ID: 27
+[INFO] 2025-11-24 10:46:04 [SCRAPER:scraper_manager.linkedin] Results: 3 jobs found, 3 new, 0 updated, 0 duplicates
+[INFO] 2025-11-24 10:46:04 [SCRAPER:scraper_manager.linkedin] Execution time: 58.98s

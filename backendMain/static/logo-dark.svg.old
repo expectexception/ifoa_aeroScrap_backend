@@ -1,0 +1,18 @@
+<svg width="200" height="60" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="200" height="60" fill="#1e293b"/>
+  
+  <!-- Airplane icon -->
+  <path d="M30 25 L45 30 L30 35 Z" fill="url(#grad2)"/>
+  <circle cx="28" cy="30" r="3" fill="#60a5fa"/>
+  
+  <!-- Text -->
+  <text x="55" y="38" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#f1f5f9">IFOA</text>
+</svg>

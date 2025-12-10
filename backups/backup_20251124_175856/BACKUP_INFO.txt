@@ -1,0 +1,20 @@
+AeroOps Backend Backup
+======================
+Backup Date: 2025-11-24 17:58:56
+Backup ID: 20251124_175856
+
+Database:
+- Name: aero_scraper_db
+- Format: PostgreSQL custom (.dump) + SQL (.sql)
+
+Contents:
+- database/  : PostgreSQL dumps
+- code/      : Full source code
+- config/    : Configuration files
+- logs/      : Recent application logs
+
+Restore Instructions:
+1. Database: pg_restore -U aero_user -d aero_scraper_db database/aeroops_20251124_175856.dump
+2. Code: Copy code/* to project directory
+3. Config: Copy .env and settings
+4. Run: python manage.py migrate

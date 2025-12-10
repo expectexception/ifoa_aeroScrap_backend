@@ -1,0 +1,77 @@
+{
+  "skills": {
+    "flight planning": 5,
+    "crew resource management": 5,
+    "performance calculations": 4,
+    "navigation": 5,
+    "meteorology": 4,
+    "radio communications": 4,
+    "emergency procedures": 5,
+    "aircraft systems": 4,
+    "flight operations": 5,
+    "weight and balance": 4,
+    "aviation safety": 5,
+    "flight instruction": 4,
+    "instrument procedures": 4,
+    "aerodynamics": 3,
+    "aviation regulations": 4,
+    "atc procedures": 4,
+    "avionics": 3,
+    "aircraft maintenance": 3,
+    "flight dispatch": 4,
+    "cabin crew management": 3,
+    "dangerous goods": 3,
+    "ground operations": 3,
+    "aviation security": 3,
+    "sop compliance": 4,
+    "simulator training": 4
+  },
+  "skill_thresholds": {
+    "excellent": 20,
+    "good": 12,
+    "average": 6
+  },
+  "gap_months_threshold": 3,
+  "aviation": {
+    "certifications": [
+      "ATPL",
+      "CPL",
+      "PPL",
+      "Instrument Rating",
+      "Type Rating",
+      "Multi-Engine",
+      "Flight Instructor",
+      "MEP",
+      "SEP",
+      "Airline Transport Pilot"
+    ],
+    "aircraft_types": [
+      "A320",
+      "B737",
+      "B777",
+      "A330",
+      "B747",
+      "Cessna",
+      "King Air",
+      "DH8",
+      "Embraer",
+      "CRJ"
+    ],
+    "hours_labels": [
+      "total flight hours",
+      "total hours",
+      "flight hours",
+      "hours",
+      "TT",
+      "PIC",
+      "PF",
+      "Simulator hours"
+    ],
+    "hours_regex": "(?i)(?:total flight hours|total hours|flight hours|tt|pic|pf)[:\\s]*([0-9,]+)",
+    "weights": {
+      "certification": 5,
+      "aircraft_type": 2,
+      "per_100_hours": 1
+    }
+  }
+}

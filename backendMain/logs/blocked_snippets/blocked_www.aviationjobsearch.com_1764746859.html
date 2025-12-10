@@ -1,0 +1,269 @@
+<!-- BLOCKED SNIPPET: URL=https://www.aviationjobsearch.com/en-GB/jobs -->
+<!DOCTYPE html><html lang="en-GB"><head>
+    <!-- GTM Slot start -->
+    <!-- Preconnect Start -->
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<!-- Preconnect End -->
+<!-- Facebook Verification -->
+<meta name="facebook-domain-verification" content="etgbnuv0bt9qundsyy8yhbkv99smda">
+<meta name="google-site-verification" content="_y6uulyLUBceXBOl_5LsclAFkZBhOv1El1hlIMER8Io">
+<!-- paste as high in the <head> of the page as possible -->
+<!-- Google Tag Manager -->
+<script type="text/javascript" async="" src="https://www.clarity.ms/tag/mjic44bkjf?ref=gtm"></script><script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=G-BY30H9VW43&amp;cx=c&amp;gtm=4e5bj1"></script><script async="" src="https://scripts.clarity.ms/0.8.41/clarity.js"></script><script async="" src="https://www.clarity.ms/tag/o1ypz55wh6"></script><script async="" src="https://www.googletagmanager.com/gtm.js?id=GTM-K7HRTCS"></script><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K7HRTCS');</script>
+<!-- End Google Tag Manager -->
+
+<!-- Start Google Tag Manager - AJAX Script -->
+<script id="gtm-jq-ajax-listen" type="text/javascript">
+var lastAjaxGTMData = null;
+(function() {
+
+    'use strict';
+    var $;
+    var n = 0;
+    docReady(bindGTMToAjax);
+})();
+
+function docReady(fn) {
+    // see if DOM is already available
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+        // call on next available tick
+        setTimeout(fn, 1);
+    } else {
+        document.addEventListener("DOMContentLoaded", fn);
+    }
+}
+
+function bindGTMToAjax() {
+
+    $(document).bind('ajaxComplete', function(evt, jqXhr, opts) {
+
+        // Create a fake a element for magically simple URL parsing
+        var fullUrl = document.createElement('a');
+        fullUrl.href = opts.url;
+
+        // IE9+ strips the leading slash from a.pathname because who wants to get home on time Friday anyways
+        var pathname = fullUrl.pathname[0] === '/' ? fullUrl.pathname : '/' + fullUrl.pathname;
+        // Manually remove the leading question mark, if there is one
+        var queryString = fullUrl.search[0] === '?' ? fullUrl.search.slice(1) : fullUrl.search;
+        // Turn our params and headers into objects for easier reference
+        var queryParameters = objMap(queryString, '&', '=', true);
+        var headers = objMap(jqXhr.getAllResponseHeaders(), '\n', ':');
+
+        var url = fullUrl.href;
+        var is_api_call = fullUrl.href.lastIndexOf('/api/') >= 0 ? 1 : 0;
+
+        var is_ignore_url = 0;
+        var is_ignore_event = 0;
+        var current_web_url = evt.target ? evt.target.URL : evt.currentTarget.URL;
+
+        var webQueryString = current_web_url.indexOf('?') >= 0 ? current_web_url.slice(current_web_url.indexOf('?') + 1) : '';
+        // Turn our params and headers into objects for easier reference
+        var webQueryParameters = objMap(webQueryString, '&', '=', true);
+
+        $.each(_gtmIgnoreUrls(), function (index, ignoreUrl) {
+            if (url.indexOf(ignoreUrl) >= 0) {
+                is_ignore_url = 1;
+            }
+        });
+        $.each(_gtmIgnoreEvents(), function (index, ignoreEvent) {
+            if (url.indexOf(ignoreEvent) >= 0) {
+                is_ignore_event = 1;
+            }
+        });
+
+        // Blindly push to the dataLayer because this fires within GTM
+        dataLayer.push({
+            'event': 'ajaxComplete',
+            'attributes': {
+                // Return empty strings to prevent accidental inheritance of old data
+                'type': opts.type || '',
+                'is': {
+                    'api': is_api_call,
+                    'ignore_url': is_ignore_url,
+                    'ignore_event': is_ignore_event
+                },
+                'web': {
+                    "url": current_web_url,
+                    "title": evt.target.title,
+                    "query_parameters": webQueryParameters
+                },
+                'ajax': {
+                    'url': url || '',
+                    'query_parameters': queryParameters,
+                    'path': pathname || ''
+                },
+                'hostname': fullUrl.hostname || '',
+                'protocol': fullUrl.protocol || '',
+                'fragment': fullUrl.hash || '',
+                'statusCode': jqXhr.status || '',
+                'statusText': jqXhr.statusText || '',
+                'headers': headers,
+                'timestamp': evt.timeStamp || '',
+                'contentType': opts.contentType || '',
+                // Defer to jQuery's handling of the response
+                'response': (jqXhr.responseJSON || jqXhr.responseXML || jqXhr.responseText || '')
+            }
+        });
+
+		lastAjaxGTMData = dataLayer[dataLayer.length - 1]
+    });
+
+}
+  
+function objMap(data, delim, spl, decode) {
+
+    var obj = {};
+
+    // If one of our parameters is missing, return an empty object
+    if (!data || !delim || !spl) {
+        return {};
+    }
+
+    var arr = data.split(delim);
+    var i;
+
+    if (arr) {
+
+        for (i = 0; i < arr.length; i++) {
+
+            // If the decode flag is present, URL decode the set
+            var item = decode ? decodeURIComponent(arr[i]) : arr[i];
+            var pair = item.split(spl);
+
+            var key = trim_(pair[0]);
+            var value = trim_(pair[1]);
+
+            if (key && value) {
+
+                obj[key] = value;
+            }
+        }
+    }
+
+    return obj;
+}
+
+// Basic .trim() polyfill
+function trim_(str) {
+
+    if (str) {
+        return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+    }
+}
+
+function _gtmIgnoreUrls() {
+    return [];
+}
+
+function _gtmIgnoreEvents() {
+    return [];
+}
+
+
+</script>
+<!-- End Google Tag Manager - AJAX Script -->
+<!-- Start - Organization Schema -->
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Aviation Job Search","url":"https://www.aviationjobsearch.com/en-GB","logo":"https://assets-jb.fmg-services.co.uk/AJS/uploads/logo/0MSX1MJLArByl6X6ncnBWfleddgznAxMd9tATqm5.svg","image":"https://assets-jb.fmg-services.co.uk/AJS/uploads/logo/0MSX1MJLArByl6X6ncnBWfleddgznAxMd9tATqm5.svg","description":"The number one destination for aviation professionals looking to take off in their career. We provide aviation professionals with insights for their career growth, allowing them to connect and discover new opportunities, and help airlines and aviation companies grow by connecting them to the best in aviation.","address":{"@type":"PostalAddress","streetAddress":"Capitol House, 8 Pittman Court, Pittman Way, Fulwood, Preston, PR2 9ZG","addressLocality":"Preston","addressRegion":"England, UK","postalCode":"PR2 9ZG","addressCountry":"GB"},"location":{"@type":"Place","geo":{"@type":"GeoCoordinates","latitude":"53.796415987714624","longitude":"-2.6876446633566777"}},"contactPoint":{"@type":"ContactPoint","contactType":"Customer Service","email":"recruiting@aviationjobsearch.com","telephone":"+44-1772-639605"}}</script>
+<!-- End - Organization Schema -->
+    <!-- GTM Slot end -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&amp;family=Roboto:wght@400;500;700&amp;display=swap">
+    <!-- Bootstrap core CSS -->
+    <link href="https://www.aviationjobsearch.com/css/vendor/bootstrap.min.css?1679411853" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <!-- JQuery -->
+    <script src="https://www.aviationjobsearch.com/js/vendor/jquery-3.5.1.min.js?1679411853" type="text/javascript"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="https://www.aviationjobsearch.com/js/vendor/popper.min.js?1679411853"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="https://www.aviationjobsearch.com/js/vendor/bootstrap.min.js?1679411853"></script>
+                        <title>All Jobs in Aviation | Aviation Job Search</title>
+        <meta name="title" content="All Jobs in Aviation | Aviation Job Search">
+        <meta name="description" content="Hundreds of Amazing Jobs Updated Daily. Let us Kickstart your Airline Career! Top Industry Employers · Receive Email Job Alerts · Hundreds Of Aviation Jobs · Find Your Dream Job.">
+                    <meta name="robots" content="index,follow">
+                                            <link rel="alternate" hreflang="en-GB" href="https://www.aviationjobsearch.com/en-GB/jobs">
+                            <link rel="alternate" hreflang="en-US" href="https://www.aviationjobsearch.com/en-US/jobs">
+                        <link rel="alternate" hreflang="x-default" href="https://www.aviationjobsearch.com/en-GB/jobs">
+                        <meta property="og:title" content="All Jobs in Aviation | Aviation Job Search">
+    <meta property="og:image" content="https://www.aviationjobsearch.com/storage/AJS/uploads/logo/hYHNCZAD6m9Z2b1cBWWsPlr8alhvCI3fsIDoCKNp.png">
+    <meta property="og:description" content="Hundreds of Amazing Jobs Updated Daily. Let us Kickstart your Airline Career! Top Industry Employers · Receive Email Job Alerts · Hundreds Of Aviation Jobs · Find Your Dream Job.">
+    <meta property="og:url" content="https://www.aviationjobsearch.com/en-GB/jobs">
+    <meta property="og:type" content="website">
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="All Jobs in Aviation | Aviation Job Search">
+    <meta property="twitter:image" content="https://www.aviationjobsearch.com/storage/AJS/uploads/logo/hYHNCZAD6m9Z2b1cBWWsPlr8alhvCI3fsIDoCKNp.png">
+    <meta property="twitter:description" content="Hundreds of Amazing Jobs Updated Daily. Let us Kickstart your Airline Career! Top Industry Employers · Receive Email Job Alerts · Hundreds Of Aviation Jobs · Find Your Dream Job.">
+        <meta name="cf-turnstile-site-key" content="0x4AAAAAAACwJpoOtXJQOG7i">
+    <link rel="icon" href="https://www.aviationjobsearch.com/storage/AJS/uploads/header/1rmwlGVoFaZqJVLaZLUhWS2LF4RdsiSlFVkTwEQ7.ico">
+    <link rel="canonical" href="https://www.aviationjobsearch.com/en-GB/jobs">
+    <!-- Add Global CSS or Variables here -->
+    <link rel="stylesheet" href="https://www.aviationjobsearch.com/css/portals/aviationjobsearch.css?1713418567">
+    <link rel="stylesheet" href="https://www.aviationjobsearch.com/css/candidate/header.css?1734591524">
+    <link rel="stylesheet" href="https://www.aviationjobsearch.com/css/candidate/footer.css?1721278663">
+    <link rel="stylesheet" href="https://www.aviationjobsearch.com/css/candidate/cookie-popup.css?1713418567">
+    <!-- Add Global JS here -->
+    <script src="https://www.aviationjobsearch.com/js/utility.js?1689837886"></script>
+    <script src="https://www.aviationjobsearch.com/js/ui-helpers.js?1666156717"></script>
+        <link rel="stylesheet" href="https://www.aviationjobsearch.com/css/candidate/form.css?1760514233">
+    <link rel="stylesheet" href="https://www.aviationjobsearch.com/css/candidate/location-search.css?1715147640">
+    <link rel="stylesheet" href="https://www.aviationjobsearch.com/css/candidate/breadcrumb.css?1740029544">
+    <link rel="stylesheet" href="https://www.aviationjobsearch.com/css/candidate/badge.css?1718774091">
+    <link rel="stylesheet" href="https://www.aviationjobsearch.com/css/candidate/alert-message.css?1713418567">
+    <link rel="stylesheet" href="https://www.aviationjobsearch.com/css/candidate/pagination.css?1713418567">
+    <link rel="stylesheet" href="https://www.aviationjobsearch.com/css/candidate/faq-wrapper.css?1727240859">
+    <link rel="stylesheet" href="https://www.aviationjobsearch.com/css/candidate/toasts.css?1689571942">
+    <link rel="stylesheet" href="https://www.aviationjobsearch.com/css/candidate/modal-popup.css?1750935287">
+    <link rel="stylesheet" href="https://www.aviationjobsearch.com/css/vendor/owl.carousel.min.css?1679411853">
+    <link rel="stylesheet" href="https://www.aviationjobsearch.com/css/job-search.css?1761716874">
+    <!-- select2 jQuery -->
+    <link href="https://www.aviationjobsearch.com/css/vendor/select2.min.css?1679411853" rel="stylesheet">
+    <link rel="stylesheet" href="https://www.aviationjobsearch.com/css/candidate/select2.css?1760514233">
+        <link rel="stylesheet" href="https://www.aviationjobsearch.com/css/candidate/page-loader.css?1713418567">
+            <!-- Clarity Tracking Code for aviationjobsearch.com -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "o1ypz55wh6");
+</script>
+    
+    </head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K7HRTCS" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+<input type="hidden" name="_logged_in_" value="0">
+<header id="siteHeader">
+
+        <!-- Top bar  -->
+    <div class="top-bar ga-topbar">
+        <div class="container">
+            <a href="https://www.aviationjobsearch.com/en-GB/post-a-job/pricing">Post a job</a>
+                            <span>|</span>
+                <a href="https://www.aviationjobsearch.com/courses/en-GB/post-a-course/pricing">Post a course</a>
+                    </div>
+    </div>
+
+        <nav class="navbar navbar-expand-xl navbar-light site-header ga-nav-menu">
+            <div class="container">
+                <div class="row w-100">
+                    <div class="col-12">
+                        <div class="nav-item-wrapper">
+                            <div class="logo-section">
+                                <button class="navbar-toggler" type="button" data-toggle="collapse" data-trigger="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+                                <a class="navbar-brand ga-brand-link" href="https://www.aviationjobsearch.com/en-GB">
+                                    <picture>
+                                        <source media="(max-width:
