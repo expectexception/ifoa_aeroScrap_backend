@@ -6,6 +6,7 @@ Extracts aviation job listings from jobs.aapaviation.com
 import asyncio
 import re
 from datetime import datetime
+from urllib.parse import urljoin
 from playwright.async_api import async_playwright
 from .base_scraper import BaseScraper
 from .job_schema import get_job_dict
@@ -19,6 +20,14 @@ class AAPAviationScraper(BaseScraper):
         self.site_config = config['sites']['aap']
         self.base_url = self.site_config['base_url']
         self.jobs_url = self.site_config['jobs_url']
+
+    def _make_absolute_url(self, url):
+        """Convert relative URL to absolute URL"""
+        if not url:
+            return url
+        if url.startswith('http'):
+            return url
+        return urljoin(self.base_url, url)
         
     async def run(self):
         """Main execution method"""
@@ -103,14 +112,12 @@ class AAPAviationScraper(BaseScraper):
                 print("✓ Page loaded, extracting jobs...")
                 
                 # Try multiple selectors for job cards
+                # Try multiple selectors for job cards
                 selectors = [
+                    '.job-tile',  # Specific to current Quasar app
+                    'a[href*="/jobs/"]',
+                    '.q-card',
                     'article',
-                    '.job-card',
-                    '.job-item',
-                    '[class*="job-listing"]',
-                    '[class*="JobCard"]',
-                    'div[data-job-id]',
-                    '.listing-item',
                 ]
                 
                 job_elements = []
@@ -164,96 +171,76 @@ class AAPAviationScraper(BaseScraper):
         
         return jobs
     
-    async def _extract_job_from_card(self, element, idx):
-        """Extract job data from a job card element"""
+    async def _extract_job_from_card(self, element, index):
+        """Extract job details from a card element"""
         try:
-            # Get all text content
-            text = await element.inner_text()
-            lines = [line.strip() for line in text.split('\n') if line.strip()]
+            # Check if element is a link itself (for .job-tile)
+            tag_name = await element.evaluate('el => el.tagName.toLowerCase()')
+            if tag_name == 'a':
+                link_elem = element
+            else:
+                link_elem = await element.query_selector('a')
             
-            # Try to find links within the element
-            links = await element.query_selector_all('a')
-            job_url = None
+            if not link_elem:
+                return None
             
-            if links:
-                for link in links:
-                    href = await link.get_attribute('href')
-                    if href:
-                        # Build full URL
-                        if href.startswith('/'):
-                            job_url = f"{self.base_url}{href}"
-                        elif href.startswith('http'):
-                            job_url = href
-                        else:
-                            job_url = f"{self.base_url}/{href}"
-                        break
+            url = await link_elem.get_attribute('href')
+            if not url:
+                return None
+                
+            full_url = self._make_absolute_url(url)
             
-            # Extract title (usually first line or in h2/h3)
-            title = 'Unknown Position'
-            title_elem = await element.query_selector('h1, h2, h3, h4, .title, [class*="title"]')
-            if title_elem:
-                title = (await title_elem.inner_text()).strip()
-            elif lines:
-                title = lines[0]
+            # Extract title
+            title_elem = await element.query_selector('.text-h6')
+            title = await title_elem.inner_text() if title_elem else ''
             
-            # Extract location
-            location = ''
-            location_elem = await element.query_selector('.location, [class*="location"], [data-location]')
-            if location_elem:
-                location = (await location_elem.inner_text()).strip()
-            elif len(lines) > 1:
-                # Location often on second line
-                for line in lines[1:3]:
-                    if any(word in line.lower() for word in ['airport', 'city', 'state', 'country', 'remote']):
-                        location = line
-                        break
+            # If title empty, try to get from link text
+            if not title:
+                title = await link_elem.inner_text()
+            
+            title = title.strip()
+            if not title:
+                return None
+
+            # Extract location from chips
+            location = "Unknown"
+            chips = await element.query_selector_all('.q-chip__content')
+            for chip in chips:
+                text = await chip.inner_text()
+                # Heuristic: locations usually don't have numbers or "Pilot"/"Cabin Crew"
+                if text and not any(c.isdigit() for c in text) and text not in ['Permanent', 'Temporary', 'Captain', 'First Officer'] and '...' not in text:
+                    location = text
+                    break
             
             # Extract job type
-            job_type = ''
-            type_elem = await element.query_selector('.job-type, [class*="type"]')
-            if type_elem:
-                job_type = (await type_elem.inner_text()).strip()
+            job_type = "Permanent" # Default
+            for chip in chips:
+                 text = await chip.inner_text()
+                 if text in ['Permanent', 'Temporary', 'Contract']:
+                     job_type = text
+                     break
+
+            # Generate job ID from URL digits
+            job_id_match = "".join(filter(str.isdigit, full_url))
+            if not job_id_match:
+                 job_id_match = f"aap_{index}_{datetime.now().strftime('%Y%m%d')}"
             
-            # Extract posted date
-            posted_date = ''
-            date_elem = await element.query_selector('[class*="date"], [class*="posted"], time, [class*="Date"]')
-            if date_elem:
-                date_text = (await date_elem.inner_text()).strip()
-                parsed_date = self.parse_posted_date(date_text)
-                posted_date = parsed_date if parsed_date else date_text
-            
-            # Generate job ID
-            job_id = f"aap_{idx + 1}_{datetime.now().strftime('%Y%m%d')}"
-            if job_url and '/job/' in job_url:
-                # Try to extract ID from URL
-                parts = job_url.split('/')
-                for part in parts:
-                    if part.isdigit() or (len(part) > 5 and any(c.isdigit() for c in part)):
-                        job_id = f"aap_{part}"
-                        break
-            
-            job_data = {
+            job_id = f"aap_{job_id_match}"
+
+            return {
                 'job_id': job_id,
                 'title': title,
                 'company': 'AAP Aviation',
-                'source': 'aap',
-                'url': job_url or self.jobs_url,
-                'apply_url': job_url or self.jobs_url,
                 'location': location,
                 'job_type': job_type,
-                'department': '',
-                'posted_date': posted_date,
-                'closing_date': '',
-                'timestamp': datetime.now().isoformat(),
-                'description': '',
-                'requirements': '',
-                'qualifications': '',
+                'posted_date': datetime.now().strftime('%Y-%m-%d'),
+                'url': full_url,
+                'source': self.site_config.get('name', 'AAP Aviation'),
+                'description': '', # Will be fetched later
+                'apply_url': full_url
             }
-            
-            return job_data
-            
         except Exception as e:
-            print(f"Error parsing job card: {e}")
+            print(f"Error extracting job from card: {e}")
             return None
     
     def _create_basic_job(self, url, title, idx):

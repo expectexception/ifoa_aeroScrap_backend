@@ -108,6 +108,11 @@ def recheck_active_jobs_task():
     from .models import Job
     import requests
     
+    from scraper_manager.db_manager import DjangoDBManager
+    from asgiref.sync import async_to_sync
+    
+    db_manager = DjangoDBManager()
+    
     # Check 50 random active jobs that haven't been checked in 7 days
     jobs_to_check = Job.objects.filter(
         status='active',
@@ -119,18 +124,19 @@ def recheck_active_jobs_task():
     
     for job in jobs_to_check:
         try:
-            # Quick HEAD request to check if URL still exists
-            response = requests.head(job.url, timeout=5, allow_redirects=True)
+            # Use centralized check logic
+            is_active, reason = async_to_sync(db_manager.check_job_active)(job.url)
             
-            if response.status_code == 404:
+            if not is_active:
+                logger.info(f"🚫 Job {job.id} ({job.url}) is EXPIRED: {reason}")
                 job.status = 'expired'
-                job.last_checked = timezone.now()
-                job.save()
                 expired_count += 1
             else:
-                job.last_checked = timezone.now()
-                job.save()
+                # job.status = 'active' # Keep as active
+                pass
             
+            job.last_checked = timezone.now()
+            job.save()
             checked_count += 1
             
         except Exception as e:

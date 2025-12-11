@@ -1,0 +1,88 @@
+Testing Indigo Scraper...
+INFO 2025-12-11 06:54:06,050 Found resume parser config at: /home/rajat/Desktop/AeroOps Intel/aeroScrap_backend/backendMain/resumes/resumeParcerconfig.json
+INFO 2025-12-11 06:54:06,052 Resume parser initialized successfully
+INFO 2025-12-11 06:54:06,149 Starting scraper command: indigo
+INFO 2025-12-11 06:54:06,150 Preparing to run scraper: indigo
+INFO 2025-12-11 06:54:06,150 Override max_jobs: 3
+INFO 2025-12-11 06:54:06,156 Created ScraperJob with ID: 26
+INFO 2025-12-11 06:54:06,156 Initialized DjangoDBManager for indigo
+INFO 2025-12-11 06:54:06,156 [indigo] Initializing scraper (Database-only mode)
+INFO 2025-12-11 06:54:06,156 Created scraper instance for indigo
+INFO 2025-12-11 06:54:06,156 Starting scraper execution for indigo
+INFO 2025-12-11 06:54:06,156 [indigo] Starting scraper: IndiGo Airlines
+INFO 2025-12-11 06:54:06,156 [indigo] Database tracking: ENABLED
+INFO 2025-12-11 06:54:06,156 [indigo] Title filtering: ENABLED
+INFO 2025-12-11 06:54:06,156 [indigo] Max jobs limit: 3
+INFO 2025-12-11 06:55:13,666 [indigo] Saving 3 jobs to database...
+INFO 2025-12-11 06:55:13,667 [indigo] Starting batch processing of 3 jobs
+INFO 2025-12-11 06:55:13,689 [indigo] Batch complete: new=0, updated=3, duplicates=3, errors=0
+INFO 2025-12-11 06:55:13,689 [indigo] Database updated: new=0, updated=3, duplicates=3, errors=0
+INFO 2025-12-11 06:55:13,689 [indigo] Extraction stats: total=3, with_desc=3, duration=67.5s
+INFO 2025-12-11 06:55:13,689 Scraper execution completed, found 3 jobs
+INFO 2025-12-11 06:55:13,692 Updated ScraperJob 26: found=3, new=0, updated=0, time=67.5s
+
+🚀 Starting scraper: indigo (Job ID: 26)
+============================================================
+IndiGo Airlines Job Scraper
+============================================================
+📊 Database tracking: ENABLED
+🔍 Title filtering: ENABLED
+Max jobs limit: 3
+
+Fetching jobs from IndiGo Airlines...
+URL: https://www.goindigo.in/careers/job-search.html?type=&location=&department=
+
+Loading Indigo home page first (anti-blocking)...
+Navigating to careers page...
+Clicking Search Button (required for job loading)...
+  ✓ Clicked Search Button
+Waiting for job listings to load...
+  ✓ Job cards container detected
+  Page HTML size: 282404 bytes
+✓ Page loaded, extracting jobs...
+  Trying Exact div with class (div.search-result__job-cards--card): 10 elements
+✓ Found 10 jobs using: Exact div with class
+✓ Extracted 3 jobs from selectors
+
+✓ Extracted 3 jobs from listing
+
+Fetching detailed descriptions for 3 jobs...
+  Processed 3/3 jobs
+✓ Successfully extracted 3/3 descriptions
+
+✅ Database updated:
+    - New jobs: 0
+    - Updated jobs: 3
+    - Duplicates skipped: 3
+
+📊 Extraction Stats:
+  Total jobs extracted: 3
+  With descriptions: 3
+  Coverage: 100.0%
+  Duration: 67.5s
+
+======================================================================
+📄 SAMPLE JOB
+======================================================================
+  ID: indigo_8511.html
+  Title: Assistant Manager - Aircraft Acquisition
+  Company: IndiGo Airlines
+  Location: Gurgaon
+
+  Description Preview: Login/Sign Up
+Web Check-in
+Flight Status
+View/Edit Booking(s)
+Update Contact Details
+View GST Invoice
+Check Refund Status
+Partner Login
+Interest on cr...
+======================================================================
+
+
+✓ Scraper completed successfully
+  Jobs found: 3
+  Jobs new: 0
+  Jobs updated: 0
+  Duration: 67.5s

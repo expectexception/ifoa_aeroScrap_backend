@@ -11,7 +11,7 @@ AUTO_SCHEDULE = {
         'schedule': '0 */3 * * *',  # Cron: Every 3 hours (HH:00)
         'description': 'Run all enabled scrapers',
         'max_jobs': None,  # None = use per-scraper limits
-        'max_pages': None,
+
     },
     'run_priority_scrapers': {
         'enabled': True,
@@ -92,43 +92,71 @@ SCRAPER_SETTINGS = {
 SCRAPERS = {
     'signature': {
         'max_jobs': 80,  # None = extract all jobs
-        'max_pages': None,  # None = no page limit
+  # None = no page limit
     },
     'flygosh': {
         'max_jobs': 80,   # Set to 50 to limit to 50 jobs
-        'max_pages': None,  # Not applicable for listing-based scrapers
+  # Not applicable for listing-based scrapers
     },
     'aviationindeed': {
         'max_jobs': 80,   # Limit for testing
-        'max_pages': None,
+
     },
     'aap': {
         'max_jobs': 80,   # Limit for testing
-        'max_pages': None,
+
     },
     'indigo': {
         'max_jobs': 40,   # Limit for testing
-        'max_pages': None,
+
     },
     'aviationjobsearch': {
         'max_jobs': 50,   # Increased to find matching jobs
-        'max_pages': None,
+
     },
     'goose': {
         'max_jobs': 50,   # Limit for testing
-        'max_pages': None,
+
     },
     'linkedin': {
         'max_jobs': 50,   # Limit for LinkedIn scraping
-        'max_pages': None,
+
     },
     'cargolux': {
         'max_jobs': 50,
-        'max_pages': None,
+
     },
     'airindia': {
         'max_jobs': 50,
-        'max_pages': None,
+
+    },
+    'jsfirm': {
+        'max_jobs': 50,
+        'search_locations': ['Florida']
+    },
+    'allflyingjobs': {
+        'max_jobs': 50,
+        'search_queries': ['Captain', 'First Officer']
+    },
+    'emirates': {
+        'max_jobs': 100,
+        'search_queries': ['Pilot', 'Captain', 'First Officer']
+    },
+    'boeing': {
+        'max_jobs': 100,
+        'search_queries': ['Pilot'],
+        'search_locations': ['Washington']
+    },
+    'airbus': {
+        'max_jobs': 100,
+        'search_queries': ['Pilot', 'Flight Test']
+    },
+    'pilots_global': {
+        'max_jobs': 50
+    },
+    'aviationcv': {
+        'max_jobs': 50,
+
     },
 }
 
@@ -187,7 +215,7 @@ SITES = {
     },
     'linkedin': {
         'name': 'LinkedIn Jobs',
-        'enabled': True,
+        'enabled': False,
         'base_url': 'https://www.linkedin.com',
         'search_url': 'https://www.linkedin.com/jobs/search/',
         # Multiple search terms and locations supported
@@ -210,6 +238,48 @@ SITES = {
         'jobs_url': 'https://careers.airindia.com/sfcareer/search',
         'description': 'Air India careers site (SuccessFactors implementation)',
     },
+    'jsfirm': {
+        'name': 'JSFirm',
+        'enabled': True,
+        'base_url': 'https://www.jsfirm.com/',
+        'jobs_url': 'https://www.jsfirm.com/jobs', # Assuming a jobs URL
+        'description': 'JSFirm - Aviation jobs board',
+    },
+    'allflyingjobs': {
+        'name': 'AllFlyingJobs',
+        'enabled': True,
+        'base_url': 'https://www.allflyingjobs.com',
+        'jobs_url': 'https://www.allflyingjobs.com', 
+        'description': 'AllFlyingJobs - Global aviation jobs search',
+    },
+    'aviationcv': {
+        'name': 'AviationCV',
+        'enabled': True,
+        'base_url': 'https://www.aviationcv.com',
+        'jobs_url': 'https://www.aviationcv.com/jobs',
+        'description': 'AviationCV - Global aviation job board',
+    },
+    'emirates': {
+        'name': 'Emirates Group Careers',
+        'base_url': 'https://www.emiratesgroupcareers.com',
+        'description': 'Official career site for Emirates Group'
+    },
+    'boeing': {
+        'name': 'Boeing Careers',
+        'base_url': 'https://jobs.boeing.com',
+        'description': 'Boeing Career Site'
+    },
+    'airbus': {
+        'name': 'Airbus Careers',
+        'base_url': 'https://ag.wd3.myworkdayjobs.com/Airbus',
+        'api_url': 'https://ag.wd3.myworkdayjobs.com/wday/cxs/ag/Airbus/jobs',
+        'description': 'Airbus Workday Career Site'
+    },
+    'pilots_global': {
+        'name': 'PilotsGlobal',
+        'base_url': 'https://pilotsglobal.com',
+        'description': 'PilotsGlobal Job Board'
+    }
 }
 
 # Build complete config (used by scrapers)

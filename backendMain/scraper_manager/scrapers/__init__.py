@@ -13,6 +13,13 @@ from .goose_scraper import GooseRecruitmentScraper
 from .linkdin_scraper import LinkedInScraper
 from .peopleclick_scraper import CargoluxPeopleClickScraper
 from .airindia_scraper import AirIndiaScraper
+from .aviationcv_scraper import AviationCVScraper
+from .jsfirm_scraper import JSFirmScraper
+from .allflyingjobs_scraper import AllFlyingJobsScraper
+from .emirates_scraper import EmiratesScraper
+from .boeing_scraper import BoeingScraper
+from .airbus_scraper import AirbusScraper
+from .pilots_global_scraper import PilotsGlobalScraper
 
 
 # Available scrapers
@@ -27,6 +34,13 @@ SCRAPERS = {
     'linkedin': LinkedInScraper,
     'cargolux': CargoluxPeopleClickScraper,
     'airindia': AirIndiaScraper,
+    'aviationcv': AviationCVScraper,
+    'jsfirm': JSFirmScraper,
+    'allflyingjobs': AllFlyingJobsScraper,
+    'emirates': EmiratesScraper,
+    'boeing': BoeingScraper,
+    'airbus': AirbusScraper,
+    'pilots_global': PilotsGlobalScraper,
 }
 
 

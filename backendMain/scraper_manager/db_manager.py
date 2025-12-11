@@ -29,40 +29,94 @@ class DjangoDBManager:
         location_lower = location.lower()
         
         # Country code mapping - common patterns
+        # Country code mapping - common patterns
         country_map = {
-            # Full country names
-            'india': 'IN', 'united states': 'US', 'usa': 'US', 'america': 'US',
-            'united kingdom': 'GB', 'uk': 'GB', 'england': 'GB', 'scotland': 'GB',
-            'united arab emirates': 'AE', 'uae': 'AE', 'dubai': 'AE', 'abu dhabi': 'AE',
-            'singapore': 'SG', 'hong kong': 'HK', 'china': 'CN',
-            'australia': 'AU', 'canada': 'CA', 'germany': 'DE', 'france': 'FR',
-            'netherlands': 'NL', 'switzerland': 'CH', 'qatar': 'QA', 'doha': 'QA',
-            'saudi arabia': 'SA', 'riyadh': 'SA', 'jeddah': 'SA',
-            'ireland': 'IE', 'japan': 'JP', 'korea': 'KR', 'south korea': 'KR',
-            'malaysia': 'MY', 'thailand': 'TH', 'indonesia': 'ID',
-            'new zealand': 'NZ', 'spain': 'ES', 'italy': 'IT', 'portugal': 'PT',
-            'turkey': 'TR', 'brazil': 'BR', 'mexico': 'MX', 'south africa': 'ZA',
+            # --- North America ---
+            'united states': 'US', 'usa': 'US', 'us': 'US', 'america': 'US',
+            'canada': 'CA', 'mexico': 'MX',
+            # US Cities
+            'new york': 'US', 'los angeles': 'US', 'chicago': 'US', 'houston': 'US', 'phoenix': 'US',
+            'philadelphia': 'US', 'san antonio': 'US', 'san diego': 'US', 'dallas': 'US', 'san jose': 'US',
+            'austin': 'US', 'jacksonville': 'US', 'san francisco': 'US', 'indianapolis': 'US', 'columbus': 'US',
+            'fort worth': 'US', 'charlotte': 'US', 'seattle': 'US', 'denver': 'US', 'washington': 'US',
+            'boston': 'US', 'el paso': 'US', 'nashville': 'US', 'detroit': 'US', 'oklahoma city': 'US',
+            'portland': 'US', 'las vegas': 'US', 'memphis': 'US', 'louisville': 'US', 'baltimore': 'US',
+            'milwaukee': 'US', 'albuquerque': 'US', 'tucson': 'US', 'fresno': 'US', 'sacramento': 'US',
+            'atlanta': 'US', 'kansas city': 'US', 'miami': 'US', 'raleigh': 'US', 'omaha': 'US',
+            # CA Cities
+            'toronto': 'CA', 'montreal': 'CA', 'vancouver': 'CA', 'calgary': 'CA', 'edmonton': 'CA', 'ottawa': 'CA',
+
+            # --- Europe ---
+            'united kingdom': 'GB', 'uk': 'GB', 'britain': 'GB', 'england': 'GB', 'scotland': 'GB', 'wales': 'GB',
+            'germany': 'DE', 'deutschland': 'DE', 'france': 'FR', 'italy': 'IT', 'italia': 'IT',
+            'spain': 'ES', 'espana': 'ES', 'poland': 'PL', 'polska': 'PL', 'romania': 'RO',
+            'netherlands': 'NL', 'holland': 'NL', 'belgium': 'BE', 'greece': 'GR', 'portugal': 'PT',
+            'czech republic': 'CZ', 'czechia': 'CZ', 'hungary': 'HU', 'sweden': 'SE', 'austria': 'AT',
+            'switzerland': 'CH', 'bulgaria': 'BG', 'denmark': 'DK', 'finland': 'FI', 'slovakia': 'SK',
+            'norway': 'NO', 'ireland': 'IE', 'croatia': 'HR', 'moldova': 'MD', 'bosnia': 'BA',
+            'albania': 'AL', 'lithuania': 'LT', 'macedonia': 'MK', 'slovenia': 'SI', 'latvia': 'LV',
+            'estonia': 'EE', 'montenegro': 'ME', 'luxembourg': 'LU', 'malta': 'MT', 'iceland': 'IS',
+            # EU Cities
+            'london': 'GB', 'manchester': 'GB', 'birmingham': 'GB', 'glasgow': 'GB', 'liverpool': 'GB',
+            'berlin': 'DE', 'hamburg': 'DE', 'munich': 'DE', 'cologne': 'DE', 'frankfurt': 'DE',
+            'paris': 'FR', 'marseille': 'FR', 'lyon': 'FR', 'toulouse': 'FR', 'nice': 'FR',
+            'rome': 'IT', 'milan': 'IT', 'naples': 'IT', 'turin': 'IT', 'palermo': 'IT',
+            'madrid': 'ES', 'barcelona': 'ES', 'valencia': 'ES', 'seville': 'ES', 'bilbao': 'ES',
+            'amsterdam': 'NL', 'rotterdam': 'NL', 'brussels': 'BE', 'antwerp': 'BE',
+            'vienna': 'AT', 'zurich': 'CH', 'geneva': 'CH', 'stockholm': 'SE', 'oslo': 'NO',
+            'copenhagen': 'DK', 'helsinki': 'FI', 'dublin': 'IE', 'lisbon': 'PT', 'athens': 'GR',
+            'warsaw': 'PL', 'prague': 'CZ', 'budapest': 'HU', 'bucharest': 'RO', 'sofia': 'BG',
+
+            # --- Asia / Pacific ---
+            'china': 'CN', 'japan': 'JP', 'india': 'IN', 'indonesia': 'ID', 'pakistan': 'PK',
+            'bangladesh': 'BD', 'philippines': 'PH', 'vietnam': 'VN', 'thailand': 'TH', 'myanmar': 'MM',
+            'south korea': 'KR', 'korea': 'KR', 'malaysia': 'MY', 'nepal': 'NP', 'taiwan': 'TW',
+            'australia': 'AU', 'sri lanka': 'LK', 'kazakhstan': 'KZ', 'cambodia': 'KH', 'singapore': 'SG',
+            'hong kong': 'HK', 'new zealand': 'NZ',
+            # Cities
+            'tokyo': 'JP', 'osaka': 'JP', 'kyoto': 'JP', 'seoul': 'KR', 'beijing': 'CN', 'shanghai': 'CN',
+            'mumbai': 'IN', 'delhi': 'IN', 'bangalore': 'IN', 'hyderabad': 'IN', 'chennai': 'IN',
+            'kolkata': 'IN', 'pune': 'IN', 'jakarta': 'ID', 'manila': 'PH', 'bangkok': 'TH',
+            'ho chi minh': 'VN', 'hanoi': 'VN', 'kuala lumpur': 'MY', 'singapore city': 'SG',
+            'sydney': 'AU', 'melbourne': 'AU', 'brisbane': 'AU', 'perth': 'AU', 'auckland': 'NZ',
+
+            # --- Middle East ---
+            'turkey': 'TR', 'iran': 'IR', 'iraq': 'IQ', 'saudi arabia': 'SA', 'ksa': 'SA',
+            'yemen': 'YE', 'syria': 'SY', 'jordan': 'JO', 'united arab emirates': 'AE', 'uae': 'AE',
+            'israel': 'IL', 'lebanon': 'LB', 'oman': 'OM', 'kuwait': 'KW', 'qatar': 'QA', 'bahrain': 'BH',
+            # Cities
+            'istanbul': 'TR', 'ankara': 'TR', 'tehran': 'IR', 'baghdad': 'IQ', 'riyadh': 'SA',
+            'jeddah': 'SA', 'dubai': 'AE', 'abu dhabi': 'AE', 'sharjah': 'AE', 'doha': 'QA',
+            'kuwait city': 'KW', 'muscat': 'OM', 'manama': 'BH', 'amman': 'JO', 'beirut': 'LB',
+            'tel aviv': 'IL', 'jerusalem': 'IL',
+
+            # --- South America ---
+            'brazil': 'BR', 'colombia': 'CO', 'argentina': 'AR', 'peru': 'PE', 'venezuela': 'VE',
+            'chile': 'CL', 'ecuador': 'EC', 'bolivia': 'BO', 'paraguay': 'PY', 'uruguay': 'UY',
+            # Cities
+            'sao paulo': 'BR', 'rio de janeiro': 'BR', 'brasilia': 'BR', 'buenos aires': 'AR',
+            'bogota': 'CO', 'lima': 'PE', 'santiago': 'CL', 'caracas': 'VE',
+
+            # --- Africa ---
+            'nigeria': 'NG', 'ethiopia': 'ET', 'egypt': 'EG', 'dr congo': 'CD', 'tanzania': 'TZ',
+            'south africa': 'ZA', 'kenya': 'KE', 'uganda': 'UG', 'algeria': 'DZ', 'sudan': 'SD',
+            'morocco': 'MA', 'ghana': 'GH', 'mozambique': 'MZ', 'angola': 'AO', 'ivory coast': 'CI',
+            # Cities
+            'cairo': 'EG', 'lagos': 'NG', 'johannesburg': 'ZA', 'cape town': 'ZA', 'nairobi': 'KE',
+            'addis ababa': 'ET', 'casablanca': 'MA', 'accra': 'GH',
             
-            # Major cities that identify countries
-            'london': 'GB', 'manchester': 'GB', 'birmingham': 'GB', 'edinburgh': 'GB',
-            'new york': 'US', 'los angeles': 'US', 'chicago': 'US', 'houston': 'US',
-            'miami': 'US', 'atlanta': 'US', 'dallas': 'US', 'seattle': 'US',
-            'delhi': 'IN', 'mumbai': 'IN', 'bangalore': 'IN', 'hyderabad': 'IN',
-            'chennai': 'IN', 'kolkata': 'IN', 'pune': 'IN', 'gurugram': 'IN',
-            'paris': 'FR', 'frankfurt': 'DE', 'munich': 'DE', 'berlin': 'DE',
-            'amsterdam': 'NL', 'zurich': 'CH', 'geneva': 'CH',
-            'tokyo': 'JP', 'seoul': 'KR', 'bangkok': 'TH', 'kuala lumpur': 'MY',
-            'sydney': 'AU', 'melbourne': 'AU', 'brisbane': 'AU', 'perth': 'AU',
-            'toronto': 'CA', 'vancouver': 'CA', 'montreal': 'CA',
-            
-            # Airport codes (IATA)
-            'del': 'IN', 'bom': 'IN', 'blr': 'IN', 'hyd': 'IN',
-            'jfk': 'US', 'lax': 'US', 'ord': 'US', 'dfw': 'US', 'atl': 'US',
-            'lhr': 'GB', 'lgw': 'GB', 'man': 'GB',
-            'dxb': 'AE', 'auh': 'AE', 'sin': 'SG', 'hkg': 'HK',
-            'cdg': 'FR', 'fra': 'DE', 'ams': 'NL', 'zrh': 'CH',
-            'nrt': 'JP', 'icn': 'KR', 'bkk': 'TH', 'kul': 'MY',
-            'syd': 'AU', 'mel': 'AU', 'yyz': 'CA',
+            # --- Airport Codes (Expanded) ---
+            'lhr': 'GB', 'lgw': 'GB', 'man': 'GB', 'cdg': 'FR', 'ams': 'NL', 'fra': 'DE',
+            'mad': 'ES', 'bcn': 'ES', 'fco': 'IT', 'mxp': 'IT', 'zrh': 'CH', 'vie': 'AT',
+            'jfk': 'US', 'lax': 'US', 'ord': 'US', 'dfw': 'US', 'atl': 'US', 'den': 'US',
+            'sfo': 'US', 'las': 'US', 'sea': 'US', 'mia': 'US', 'mco': 'US', 'ewr': 'US',
+            'yyz': 'CA', 'yvr': 'CA', 'yul': 'CA',
+            'dxb': 'AE', 'auh': 'AE', 'doh': 'QA', 'jyd': 'SA', 'ruh': 'SA', 'mcat': 'OM',
+            'sin': 'SG', 'hkg': 'HK', 'hnd': 'JP', 'nrt': 'JP', 'icn': 'KR', 'bkk': 'TH',
+            'del': 'IN', 'bom': 'IN', 'blr': 'IN', 'hyd': 'IN', 'maa': 'IN', 'ccu': 'IN',
+            'syd': 'AU', 'mel': 'AU', 'bne': 'AU', 'akl': 'NZ',
+            'gru': 'BR', 'bog': 'CO', 'lim': 'PE', 'scl': 'CL', 'eze': 'AR',
+            'jnb': 'ZA', 'cpt': 'ZA', 'cai': 'EG', 'los': 'NG', 'nbo': 'KE'
         }
         
         # Check each pattern
@@ -85,14 +139,52 @@ class DjangoDBManager:
         
         # Keywords for each operation type
         operation_patterns = {
-            'cargo': ['cargo', 'freight', 'fedex', 'ups', 'dhl', 'logistics', 'supply chain'],
-            'helicopter': ['helicopter', 'rotor', 'vtol', 'bell ', 'sikorsky', 'airbus helicopters'],
-            'mro': ['mro', 'maintenance', 'repair', 'overhaul', 'mechanic', 'engineer', 'technician', 'avionics'],
-            'ground_ops': ['ground', 'ramp', 'airport operations', 'ground handling', 'baggage', 'gate agent'],
-            'atc': ['air traffic', 'atc', 'tower', 'approach control', 'radar'],
-            'business': ['business aviation', 'private jet', 'executive', 'charter', 'fractional', 'netjets', 'flexjet'],
-            'low_cost': ['low cost', 'low-cost', 'budget airline', 'easyjet', 'ryanair', 'southwest', 'spirit', 'frontier'],
-            'scheduled': ['scheduled', 'commercial airline', 'regular service'],
+            'cargo': [
+                'cargo', 'freight', 'logistics', 'supply chain', 'warehouse',
+                'fedex', 'ups', 'dhl', 'atlas air', 'kalitta', 'cargolux', 'western global',
+                'polar air', 'amerijet', 'abx air', 'ati', 'omni air', 'national airlines'
+            ],
+            'helicopter': [
+                'helicopter', 'rotor', 'vtol', 'rotary', 'hems', 'offshore',
+                'bell', 'sikorsky', 'airbus helicopters', 'leonardo', 'robinson',
+                'phi', 'air method', 'bristow', 'era', 'chn', 'cougar helicopters'
+            ],
+            'mro': [
+                'mro', 'maintenance', 'repair', 'overhaul', 'mechanic', 'technician',
+                'engineer', 'avionics', 'sheet metal', 'structure', 'a&p', 'b1', 'b2',
+                'inspector', 'quality control', 'technical records', 'camu', 'planner',
+                'mod center', 'completion', 'interior'
+            ],
+            'ground_ops': [
+                'ground', 'ramp', 'airport operations', 'ground handling', 'baggage',
+                'gate agent', 'station manager', 'dispatcher', 'loadmaster', 'turnaround',
+                'fueler', 'passenger service', 'customer service agent', 'check-in',
+                'lounge', 'concierge', 'security', 'screener'
+            ],
+            'atc': [
+                'air traffic', 'atc', 'tower', 'approach control', 'radar', 'controller',
+                'flight data', 'ground control', 'en route', 'center'
+            ],
+            'business': [
+                'business aviation', 'private jet', 'executive', 'charter', 'corporate',
+                'fractional', 'vip', 'v vip', 'bizjet',
+                'netjets', 'flexjet', 'vista', 'xo', 'wheels up', 'flyexclusive',
+                'jet aviation', 'signature', 'atlantic aviation', 'million air', 'gulfstream',
+                'bombardier', 'dassault', 'embraer executive', 'citation'
+            ],
+            'low_cost': [
+                'low cost', 'low-cost', 'budget airline', 'lcc', 'ulcc',
+                'southwest', 'ryanair', 'easyjet', 'wizz', 'spirit', 'frontier',
+                'allegiant', 'jetblue', 'indigo', 'airasia', 'scoot', 'volaris',
+                'aig', 'flydubai', 'air arabia', 'pegasus', 'cebu pacific'
+            ],
+            'scheduled': [
+                'scheduled', 'commercial airline', 'regular service', 'network carrier',
+                'legacy carrier', 'flag carrier', 'regional airline',
+                'american airlines', 'delta', 'united', 'british airways', 'lufthansa',
+                'air france', 'klm', 'emirates', 'qatar airways', 'etihad',
+                'singapore airlines', 'cathay pacific', 'ana', 'jal', 'qantas'
+            ],
         }
         
         # Check patterns
@@ -190,11 +282,32 @@ class DjangoDBManager:
                 return None, False
             
             # Parse posted_date if it's a string
+            # Parse posted_date if it's a string
             posted_date = job_data.get('posted_date')
             if isinstance(posted_date, str):
                 from dateutil import parser
                 try:
-                    posted_date = parser.parse(posted_date).date()
+                    # Clean up common prefixes
+                    clean_date = posted_date.lower().replace('posted', '').strip()
+                    
+                    # Handle relative dates
+                    if 'yesterday' in clean_date:
+                        posted_date = (timezone.now() - timedelta(days=1)).date()
+                    elif 'today' in clean_date:
+                        posted_date = timezone.now().date()
+                    elif 'ago' in clean_date:
+                        # "30+ days ago", "2 days ago"
+                        import re
+                        match = re.search(r'(\d+)', clean_date)
+                        if match:
+                            days = int(match.group(1))
+                            posted_date = (timezone.now() - timedelta(days=days)).date()
+                        else:
+                            # Fallback to current date or None? 
+                            # If "30+ days ago", assume 30.
+                            posted_date = None
+                    else:
+                        posted_date = parser.parse(posted_date).date()
                 except Exception as e:
                     logger.debug(f"Could not parse posted_date '{posted_date}': {e}")
                     posted_date = None
@@ -378,30 +491,43 @@ class DjangoDBManager:
             logger.error(f"Failed to mark job closed for {url}: {e}", exc_info=True)
             return False
 
-    def check_job_active(self, url: str, use_playwright: bool = False) -> tuple[bool, str]:
+    async def check_job_active(self, url: str, use_playwright: bool = False) -> tuple[bool, str]:
         """
         Check whether a job page is still active.
         Returns (is_active, reason) where reason describes why it was marked closed if False.
-
-        Logic:
-        - If HTTP status is 404/410 => closed
-        - If JSON-LD contains validThrough < today => closed
-        - If body contains closed words like 'position has been filled', 'no longer accepting applications' => closed
-        - Otherwise assume active.
         """
         try:
-            # Lightweight requests check first
+            # 1. Lightweight requests check
             import requests
-            headers = {'User-Agent': self._extract_country_code.__name__}
-            r = requests.get(url, headers=headers, timeout=10)
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            }
+            
+            # Use GET to check content
+            # Allow redirects - if it redirects to search page, it might be closed
+            try:
+                r = await sync_to_async(requests.get)(url, headers=headers, timeout=10, allow_redirects=True)
+            except Exception as e:
+                logger.warning(f"Request failed for {url}: {e}")
+                # If request fails connection, might be a temporary issue or site blocking
+                return True, 'request_failed'
+
             status = r.status_code
             if status in (404, 410):
                 return False, f'http_{status}'
+            
+            # Check redirects
+            if len(r.history) > 0:
+                final_url = r.url
+                # Heuristic: If significant URL change (e.g. detailed slug to generic path), likely expired
+                if len(final_url) < len(url) * 0.7 and 'login' not in final_url:
+                    return False, 'redirected_to_generic'
 
             body = r.text or ''
             body_lower = body.lower()
 
-            # Look for some closed/expired keywords
+            # Look for closed/expired keywords
+            # Added more keywords
             closed_keywords = [
                 'position has been filled',
                 'position is filled',
@@ -413,10 +539,17 @@ class DjangoDBManager:
                 'vacancy closed',
                 'the listing has expired',
                 'this job has expired',
-                'role has been filled'
+                'role has been filled',
+                'posting is closed',
+                'search results' # Sometimes redirects to search results
             ]
+            
+            # Limit search to first 50KB
+            search_body = body_lower[:50000]
+            
             for kw in closed_keywords:
-                if kw in body_lower:
+                if kw in search_body:
+                    # Check context? No, usually safe enough.
                     return False, f'closed_keyword:{kw}'
 
             # JSON-LD date checks
@@ -439,12 +572,16 @@ class DjangoDBManager:
                             except Exception:
                                 pass
 
+            # If requests didn't flag it, and we want to use playwright (e.g. for SPAs)
+            if use_playwright:
+                 # TODO: Implement Playwright check for JS-heavy sites
+                 pass
+
             # If none matched, assume active
             return True, 'ok'
 
         except Exception as e:
             logger.debug(f"check_job_active error for {url}: {e}")
-            # If errors reach here, we conservatively treat job as active
             return True, 'check_error'
     
     def print_statistics(self):

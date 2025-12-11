@@ -151,11 +151,40 @@ class CargoluxPeopleClickScraper(BaseScraper):
                             await self.random_delay(1, 2)
 
                         # Try to click the search button to list all jobs
+                        print("Trying to click search button...")
                         try:
-                            await page.click('button:has-text("Search")')
-                            await self.random_delay(1, 3)
-                        except Exception:
-                            pass
+                            # Try multiple selectors for the search button
+                            search_btn_selectors = [
+                                '#sp-searchButton',
+                                'input#sp-searchButton',
+                                'button#sp-searchButton',
+                                'input[value="Search"]',
+                                'button:has-text("Search")',
+                                'a.pf-rwd-searchButton' # Potential class
+                            ]
+                            
+                            clicked = False
+                            for btn_sel in search_btn_selectors:
+                                try:
+                                    if await page.is_visible(btn_sel):
+                                        print(f"Clicking search button: {btn_sel}")
+                                        await page.click(btn_sel)
+                                        clicked = True
+                                        break
+                                except Exception:
+                                    continue
+                            
+                            if clicked:
+                                print("Search button clicked, waiting for results...")
+                                await self.random_delay(2, 4)
+                                # Wait for results to appear
+                                try:
+                                    await page.wait_for_selector('a[href*="/job/"]', timeout=10000)
+                                    print("Results loaded")
+                                except Exception:
+                                    print("Timeout waiting for results after click")
+                        except Exception as e:
+                            print(f"Error acting on search button: {e}")
                     except Exception:
                         pass
 

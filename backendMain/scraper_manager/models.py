@@ -23,6 +23,7 @@ class ScraperJob(models.Model):
         ('aviationjobsearch', 'Aviation Job Search'),
         ('goose', 'GOOSE Recruitment'),
         ('linkedin', 'LinkedIn Jobs'),
+        ('pilots_global', 'PilotsGlobal'),
         ('all', 'All Scrapers'),
     ]
     

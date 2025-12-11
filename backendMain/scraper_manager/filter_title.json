@@ -224,6 +224,107 @@
         "System Operations Centre",
         "Global Operations Centre"
       ]
+    },
+    {
+      "FilterType": "Flight_Deck_Crew",
+      "DisplayName": "Pilot & Flight Deck",
+      "Description": "Keywords for pilot and flight deck crew roles.",
+      "Keywords": [
+        "Pilot",
+        "Captain",
+        "First Officer",
+        "Second Officer",
+        "Flight Deck",
+        "Direct Entry Captain",
+        "DEC",
+        "Command",
+        "Co-Pilot",
+        "Instructor Pilot",
+        "TRI",
+        "TRE",
+        "Examiner",
+        "Line Pilot",
+        "Helicopter Pilot",
+        "Rotor Pilot",
+        "Chief Pilot",
+        "Director of Flight Operations",
+        "Test Pilot",
+        "Ferry Pilot",
+        "Safety Pilot"
+      ]
+    },
+    {
+      "FilterType": "Maintenance_Engineering",
+      "DisplayName": "Maintenance & Engineering (MRO)",
+      "Description": "Keywords for aircraft maintenance, engineering, and technical roles.",
+      "Keywords": [
+        "Aircraft Engineer",
+        "Licensed Aircraft Engineer",
+        "LAE",
+        "AME",
+        "Maintenance",
+        "Technician",
+        "Mechanic",
+        "Avionics",
+        "Sheet Metal",
+        "Structures",
+        "B1",
+        "B2",
+        "A&P",
+        "Powerplant",
+        "Airframe",
+        "Base Maintenance",
+        "Line Maintenance",
+        "MRO",
+        "CAMO",
+        "Continuous Airworthiness",
+        "Technical Services",
+        "Engineering",
+        "Quality Assurance",
+        "Inspector",
+        "Certifying Staff"
+      ]
+    },
+    {
+      "FilterType": "Cabin_Crew_Inflight",
+      "DisplayName": "Cabin Crew & In-flight",
+      "Description": "Keywords for cabin crew, flight attendants, and in-flight service.",
+      "Keywords": [
+        "Cabin Crew",
+        "Flight Attendant",
+        "Steward",
+        "Stewardess",
+        "In-flight Manager",
+        "Cabin Manager",
+        "Purser",
+        "Cabin Service",
+        "Inflight Director",
+        "Cabin Senior",
+        "Lead Flight Attendant"
+      ]
+    },
+    {
+      "FilterType": "Ground_Airport_Operations",
+      "DisplayName": "Ground & Airport Operations",
+      "Description": "Keywords for ground handling, airport services, and station management.",
+      "Keywords": [
+        "Ground Handling",
+        "Ramp Agent",
+        "Baggage Handler",
+        "Customer Service Agent",
+        "Check-in",
+        "Gate Agent",
+        "Passenger Service",
+        "Station Manager",
+        "Airport Manager",
+        "Turnaround Coordinator",
+        "Loadmaster",
+        "Dispatcher",
+        "Cargo Agent",
+        "Security Officer",
+        "Lounge Agent",
+        "Concierge"
+      ]
     }
   ]
 }

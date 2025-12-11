@@ -46,7 +46,7 @@ class BaseScraper:
         
         # Limits
         self.max_jobs = config.get('scrapers', {}).get(site_key, {}).get('max_jobs')
-        self.max_pages = config.get('scrapers', {}).get(site_key, {}).get('max_pages')
+
         self.batch_size = config.get('scraper_settings', {}).get('batch_size', 5)
         
         # NO MORE FILE OUTPUT - database only

@@ -47,6 +47,110 @@ class IndiGoScraper(BaseScraper):
         
         return jobs_with_descriptions
     
+    async def setup_stealth_page(self, browser):
+        """Create a stealthy page context"""
+        # Context with Mac UA (matches successful inspection script)
+        context = await browser.new_context(
+            user_agent='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+            viewport={'width': 1920, 'height': 1080},
+            ignore_https_errors=True
+        )
+        
+        # Advanced Stealth Init Script
+        await context.add_init_script("""
+            // 1. Pass WebDriver Test
+            Object.defineProperty(navigator, 'webdriver', {
+                get: () => undefined,
+            });
+
+            // 2. Mock Chrome
+            window.chrome = {
+                runtime: {},
+                loadTimes: function() {},
+                csi: function() {},
+                app: {}
+            };
+
+            // 3. Mock Permissions
+            const originalQuery = window.navigator.permissions.query;
+            window.navigator.permissions.query = (parameters) => (
+                parameters.name === 'notifications' ?
+                Promise.resolve({ state: 'denied' }) :
+                originalQuery(parameters)
+            );
+
+            // 4. Mock Plugins
+            Object.defineProperty(navigator, 'plugins', {
+                get: () => [1, 2, 3, 4, 5],
+            });
+            
+            // 5. Mock Languages
+            Object.defineProperty(navigator, 'languages', {
+                get: () => ['en-US', 'en'],
+            });
+            
+            // 6. WebGL Noise
+            const getParameter = WebGLRenderingContext.prototype.getParameter;
+            WebGLRenderingContext.prototype.getParameter = function(parameter) {
+                // UNMASKED_VENDOR_WEBGL
+                if (parameter === 37445) {
+                    return 'Intel Inc.';
+                }
+                // UNMASKED_RENDERER_WEBGL
+                if (parameter === 37446) {
+                    return 'Intel Iris OpenGL Engine';
+                }
+                return getParameter(parameter);
+            };
+        """)
+
+        page = await context.new_page()
+
+        # CDP Session for lower-level override (Windows UA to match inspection script quirks)
+        try:
+            cdp = await context.new_cdp_session(page)
+            await cdp.send("Network.setUserAgentOverride", {
+                "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+                "platform": "Win32",
+                "acceptLanguage": "en-US,en;q=0.9",
+            })
+        except Exception as e:
+            print(f"CDP Stealth Error: {e}")
+
+        return page, context
+
+    async def dismiss_cookie_banner(self, page):
+        """Try to dismiss the cookie banner if it appears"""
+        try:
+            # Common cookie button selectors for IndiGo/general
+            selectors = [
+                "button:has-text('Agree')", 
+                "button:has-text('Accept')", 
+                "button:has-text('Allow')", 
+                "button:has-text('Dismiss')",
+                "button.cookie-close",
+                "#onetrust-accept-btn-handler"
+            ]
+            for sel in selectors:
+                if await page.locator(sel).first.is_visible():
+                    await page.locator(sel).first.click(timeout=3000)
+                    print(f"Dismissed cookie banner using: {sel}")
+                    await self.random_delay(1, 2)
+                    return
+        except Exception:
+            pass
+
+    async def random_mouse_move_to_element(self, page, element):
+        """Move mouse to element with some randomness"""
+        try:
+            box = await element.bounding_box()
+            if box:
+                x = box['x'] + box['width'] / 2 + random.uniform(-10, 10)
+                y = box['y'] + box['height'] / 2 + random.uniform(-10, 10)
+                await page.mouse.move(x, y, steps=random.randint(5, 15))
+        except Exception:
+            pass
+            
     async def fetch_jobs_from_listing(self):
         """Fetch jobs from listing page"""
         jobs = []
@@ -73,7 +177,16 @@ class IndiGoScraper(BaseScraper):
             page, context = await self.setup_stealth_page(browser)
 
             try:
-                print("Loading IndiGo careers page...")
+                print("Loading Indigo home page first (anti-blocking)...")
+                try:
+                    await page.goto("https://www.goindigo.in", wait_until='domcontentloaded', timeout=30000)
+                    await self.random_delay(5, 8)
+                    await self.dismiss_cookie_banner(page)
+                    await self.simulate_human_behavior(page)
+                except Exception as e:
+                    print(f"  Warning: Could not load home page: {e}")
+
+                print("Navigating to careers page...")
                 # Try with different wait strategies
                 try:
                     await self.random_delay(2, 4)
@@ -83,9 +196,28 @@ class IndiGoScraper(BaseScraper):
                     await self.random_delay(3, 5)
                     await page.goto(self.jobs_url, wait_until='domcontentloaded', timeout=30000)
 
-                # Wait for dynamic content to load with longer delay to avoid blocking
+                # Simulate human behavior on careers page before interaction
+                await self.dismiss_cookie_banner(page)
+                await self.simulate_human_behavior(page)
+                await self.random_delay(2, 4)
+
+                # Try to click the search button to trigger job loading (Critical for Indigo's SPA)
+                print("Clicking Search Button (required for job loading)...")
+                try:
+                     search_btn = await page.query_selector('button.skyplus-button, button:has-text("Search"), .search-btn')
+                     if search_btn:
+                         await self.random_mouse_move_to_element(page, search_btn) # Simulate moving to button
+                         await search_btn.click()
+                         print("  ✓ Clicked Search Button")
+                         await self.random_delay(6, 10) # Wait for SPA fetch
+                     else:
+                         print("  ⚠ Search button not found")
+                except Exception as e:
+                     print(f"  ⚠ Search click error: {e}")
+
+                # Wait for dynamic content to load with longer delay
                 print("Waiting for job listings to load...")
-                await self.random_delay(12, 18)
+                await self.random_delay(8, 12)
                 await self.simulate_human_behavior(page)
 
                 # Try to wait for the job cards container specifically
@@ -460,11 +592,13 @@ class IndiGoScraper(BaseScraper):
             candidates.insert(0, m2.group(1))
 
         if not candidates:
-            # If nothing discoverable from the page (blocked), try the known AEM JSON and ms-careers endpoints
-            candidates = [
-                '/content/careers-api/skypluscareers/in/en/v1/careers-job-search.json',
-                'https://ms-careers-prod.goindigo.in/career-job-list',
-            ]
+            candidates = []
+
+        # ALWAYS add the known fallback endpoints, as dynamic ones might be 403d
+        candidates.extend([
+            '/content/careers-api/skypluscareers/in/en/v1/careers-job-search.json',
+            'https://ms-careers-prod.goindigo.in/career-job-list',
+        ])
 
         jobs = []
         for path in candidates:
@@ -523,6 +657,10 @@ class IndiGoScraper(BaseScraper):
 
                 if not items:
                     continue
+                
+                print(f"    ✓ Found {len(items)} items in API response")
+                if len(items) > 0:
+                     print(f"DEBUG: First API Item: {items[0]}")
 
                 for it in items:
                     title = it.get('title') or it.get('name') or it.get('jobTitle') or it.get('position')
@@ -531,6 +669,12 @@ class IndiGoScraper(BaseScraper):
                         url = f"https://www.goindigo.in{url}"
                     posted = it.get('datePosted') or it.get('postedDate') or it.get('publishDate') or it.get('created')
                     job = self._create_basic_job(url or self.jobs_url, title or 'No Title', len(jobs))
+                    
+                    # Extract description if available in API
+                    desc = it.get('description') or it.get('jobDescription') or it.get('richText') or it.get('details') or it.get('intro')
+                    if desc:
+                        job['description'] = desc
+
                     if isinstance(posted, str):
                         parsed = self.parse_posted_date(posted)
                         job['posted_date'] = parsed if parsed else posted
@@ -691,6 +835,10 @@ class IndiGoScraper(BaseScraper):
     
     async def _extract_description(self, browser, job):
         """Extract detailed description from job page with retry logic"""
+        # If we already have a good description (e.g. from API), don't waste time/risk overwriting
+        if job.get('description') and len(job['description']) > 100:
+            return
+
         max_retries = 3
         retry_count = 0
         
@@ -859,8 +1007,9 @@ class IndiGoScraper(BaseScraper):
                     
                     if d_len < 150:
                         error_keywords = ['something went wrong', 'please try again', 'akamai', 'error 5']
+                        # Check against keywords - simpler threshold
                         error_count = sum(1 for err in error_keywords if err in d_lower)
-                        if error_count >= 2:
+                        if error_count >= 1:
                             is_error_page = True
                     
                     if 'akamfailoverpage' in d_lower or (d_len < 200 and '404' in d_lower and 'not found' in d_lower):

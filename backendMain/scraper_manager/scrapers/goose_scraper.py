@@ -273,6 +273,21 @@ class GooseRecruitmentScraper(BaseScraper):
                     description_parts.extend(paragraph_texts)
                     description_parts.append("")
                 
+                # Fallback: If no paragraphs found, or to catch text not in p tags
+                # Get all text from container if paragraph count is low
+                if len(paragraph_texts) < 2:
+                    # Get direct text nodes or divs that look like text
+                    # We can just get the full inner_text of the container and clean it
+                    full_container_text = await main_desc_elem.inner_text()
+                    lines = [line.strip() for line in full_container_text.split('\n') if line.strip()]
+                    
+                    # Filter out lines we likely already have (headers/lists)
+                    # This is tricky to do perfectly, but getting the raw text is safer than missing it.
+                    # Let's append the cleaned text as a "Full Text" section if we missed paragraphs
+                    if not paragraph_texts:
+                         description_parts.append("=== Full Details ===")
+                         description_parts.extend([l for l in lines if len(l) > 30]) # Only substantial lines
+                
                 # Extract lists
                 lists = await main_desc_elem.query_selector_all('ul, ol')
                 list_texts = []
