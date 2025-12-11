@@ -18,13 +18,14 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-38#^34y_w662tgv%c3maq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', '1') == '1'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',') if os.environ.get('ALLOWED_HOSTS') else ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',') if os.environ.get('ALLOWED_HOSTS') else ['localhost', '127.0.0.1', '*']
 
-# Security Settings for Production
+# Security settings - only enforce HTTPS in production
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
+    # Production settings
+    CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
     SECURE_HSTS_SECONDS = 31536000  # 1 year
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
@@ -33,20 +34,30 @@ if not DEBUG:
     X_FRAME_OPTIONS = 'DENY'
 
 INSTALLED_APPS = [
+    # Django Unfold - must be before django.contrib.admin
+    'unfold',
+    'unfold.contrib.filters',
+    'unfold.contrib.forms',
+    
+    # Django core
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # Third party
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'django_celery_beat',  # Celery Beat for scheduling
     'django_celery_results',  # Store task results in database
+    'corsheaders',
+    
+    # Custom apps
     'users',  # User management and authentication
     'resumes',
-    'corsheaders',
     'jobs',
     'scraper_manager',  # Job scraper management
 ]
@@ -83,35 +94,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backendMain.wsgi.application'
 
-# Database Configuration
-if os.environ.get('DB_USE_POSTGRES') == '1':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('DB_NAME', 'aeroops_db'),
-            'USER': os.environ.get('DB_USER', 'aeroops_user'),
-            'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-            'HOST': os.environ.get('DB_HOST', 'localhost'),
-            'PORT': os.environ.get('DB_PORT', '5432'),
-            'OPTIONS': {
-                'connect_timeout': 10,
-                'options': '-c statement_timeout=30000',  # 30 seconds
-            },
-            'CONN_MAX_AGE': 600,  # Connection pooling: 10 minutes
-            'ATOMIC_REQUESTS': True,  # Wrap each request in a transaction
-            'DISABLE_SERVER_SIDE_CURSORS': True,  # Better for connection pooling
-        }
+# Database Configuration - PostgreSQL ONLY
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME', 'aeroops_db'),
+        'USER': os.environ.get('DB_USER', 'aeroops_user'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
+        'OPTIONS': {
+            'connect_timeout': 10,
+            'options': '-c statement_timeout=30000',  # 30 seconds
+        },
+        'CONN_MAX_AGE': 600,  # Connection pooling: 10 minutes
+        'ATOMIC_REQUESTS': True,  # Wrap each request in a transaction
+        'DISABLE_SERVER_SIDE_CURSORS': True,  # Better for connection pooling
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-            'OPTIONS': {
-                'timeout': 20,
-            },
-        }
-    }
+}
 
 # Testing optimization: when using SQLite in CI/tests, bypass specific migrations
 # that rely on database-specific constraints incompatible with SQLite.
@@ -130,7 +130,19 @@ else:
 # CORS Configuration
 # For simple local development allow all origins (adjust in production)
 CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL', '1') == '1'
-CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',') if os.environ.get('CORS_ALLOWED_ORIGINS') else []
+
+# Only set CORS_ALLOWED_ORIGINS if not allowing all
+if not CORS_ALLOW_ALL_ORIGINS and os.environ.get('CORS_ALLOWED_ORIGINS'):
+    CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',')
+else:
+    CORS_ALLOWED_ORIGINS = []
+
+# CSRF trusted origins for admin login
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+]
+
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -403,3 +415,6 @@ if not _logs_dir.exists():
 
 
 # Default Django Admin - No custom configuration needed
+
+# Import Django Unfold configuration
+from .unfold_config import UNFOLD

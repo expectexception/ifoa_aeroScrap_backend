@@ -275,3 +275,5 @@ from .schedule_models import ScheduleConfig
 from .application_models import JobApplication, SavedJob, JobView
 
 __all__ = ['Job', 'CompanyMapping', 'CrawlLog', 'ScheduleConfig', 'JobApplication', 'SavedJob', 'JobView']
+
+

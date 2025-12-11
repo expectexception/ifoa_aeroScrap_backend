@@ -3,6 +3,7 @@ from django.utils.html import format_html
 from django.urls import reverse
 from django.utils import timezone
 from .models import Job, CompanyMapping, CrawlLog, ScheduleConfig, JobApplication, SavedJob, JobView
+from .application_models import ShortlistedCandidate
 from .tasks import backfill_senior_flags
 import csv
 from django.http import HttpResponse
@@ -1342,3 +1343,4 @@ class CrawlLogAdmin(admin.ModelAdmin):
                 '<span style="color: {}; font-weight: bold;">{}%</span>',
                 color, round(rate, 1)
             )
+

@@ -188,3 +188,5 @@ class AviationCVScraper(BaseScraper):
         self.print_header()
         jobs = await self.fetch_jobs()
         await self.save_results(jobs)
+        return jobs
+

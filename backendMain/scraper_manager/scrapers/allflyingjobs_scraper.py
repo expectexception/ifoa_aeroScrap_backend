@@ -7,8 +7,8 @@ from playwright.async_api import Page
 from .base_scraper import BaseScraper
 
 class AllFlyingJobsScraper(BaseScraper):
-    def __init__(self, config: Dict[str, Any]):
-        super().__init__(config, site_key='allflyingjobs')
+    def __init__(self, config: Dict[str, Any], db_manager=None):
+        super().__init__(config, site_key='allflyingjobs', db_manager=db_manager)
         self.base_url = "https://www.allflyingjobs.com"
         self.jobs = []
 

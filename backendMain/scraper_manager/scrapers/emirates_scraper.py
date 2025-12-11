@@ -177,3 +177,10 @@ class EmiratesScraper(BaseScraper):
         except Exception as e:
             logger.warning(f"[{self.site_key}] Failed to scrape {url}: {e}")
             return None
+
+    async def run(self):
+        """Main entry point for the scraper"""
+        self.print_header()
+        jobs = await self.fetch_jobs()
+        await self.save_results(jobs)
+        return jobs

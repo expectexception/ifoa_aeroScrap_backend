@@ -44,8 +44,12 @@ class BaseScraper:
         self.scrape_start_time = None
         self.use_db = db_manager is not None
         
+        # Setup logger for this scraper
+        self.logger = logging.getLogger(f"{__name__}.{site_key}")
+        
         # Limits
         self.max_jobs = config.get('scrapers', {}).get(site_key, {}).get('max_jobs')
+        self.max_pages = config.get('scrapers', {}).get(site_key, {}).get('max_pages')
 
         self.batch_size = config.get('scraper_settings', {}).get('batch_size', 5)
         

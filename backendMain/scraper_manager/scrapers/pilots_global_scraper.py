@@ -1,4 +1,5 @@
 import asyncio
+import random
 import logging
 from typing import List, Dict, Any, Optional
 from datetime import datetime
@@ -20,7 +21,7 @@ class PilotsGlobalScraper(BaseScraper):
         
     async def fetch_jobs(self) -> List[Dict[str, Any]]:
         """
-        Scrape jobs from PilotsGlobal main jobs page
+        Scrape jobs from PilotsGlobal main jobs page with anti-bot measures
         """
         from playwright.async_api import async_playwright
         
@@ -47,8 +48,9 @@ class PilotsGlobalScraper(BaseScraper):
                     logger.info(f"[{self.site_key}] Scraping page {current_page}: {page_url}")
                     
                     try:
-                        await page.goto(page_url, wait_until='domcontentloaded', timeout=60000)
-                        await asyncio.sleep(2)  # Let page settle
+                        await page.goto(page_url, wait_until='networkidle', timeout=60000)
+                        # Random delay to avoid bot detection and ensure page loads
+                        await asyncio.sleep(random.uniform(3, 5))
                         
                         # Extract Job Cards using correct selector
                         job_elements = await page.query_selector_all('a.card.job')
@@ -117,6 +119,7 @@ class PilotsGlobalScraper(BaseScraper):
                                     'company': company,
                                     'title': title,
                                     'location': location,
+                                    'url': full_url,  # Required by database manager
                                     'source_url': full_url,
                                     'apply_url': full_url,
                                     'posted_date': None,
@@ -125,6 +128,9 @@ class PilotsGlobalScraper(BaseScraper):
                                 }
                                 
                                 jobs.append(job)
+                                
+                                # Small delay between processing cards
+                                await asyncio.sleep(random.uniform(0.3, 0.8))
                                 
                             except Exception as e:
                                 logger.error(f"Error parsing card: {e}")
@@ -144,7 +150,7 @@ class PilotsGlobalScraper(BaseScraper):
         return jobs
 
     async def _fetch_descriptions(self, page: Page, jobs: List[Dict]):
-        """Fetch full descriptions for jobs"""
+        """Fetch full descriptions for jobs with anti-bot delays"""
         logger.info(f"[{self.site_key}] Fetching descriptions for {len(jobs)} jobs...")
         
         for i, job in enumerate(jobs):
@@ -153,12 +159,17 @@ class PilotsGlobalScraper(BaseScraper):
                 break
                 
             try:
-                await page.goto(job['source_url'], wait_until='domcontentloaded')
+                # Random delay before each description fetch
+                await asyncio.sleep(random.uniform(1.5, 3.0))
+                
+                await page.goto(job['source_url'], wait_until='networkidle', timeout=30000)
+                
+                # Additional wait for dynamic content
+                await asyncio.sleep(random.uniform(1, 2))
                 
                 # Try to find description container
                 # Common IDs/Classes
-                desc_element = await page.query_selector('.job-description, .description, #job-details')
-                
+                desc_element = await page.query_selector('.job-description, .description, article, main')
                 if desc_element:
                     desc_text = await desc_element.inner_text()
                     job['description'] = desc_text
@@ -170,21 +181,25 @@ class PilotsGlobalScraper(BaseScraper):
                     date_text = await date_el.inner_text()
                     job['posted_date'] = date_text
 
-                await asyncio.sleep(1) # Politeness
-                
             except Exception as e:
                 logger.warning(f"[{self.site_key}] Failed to fetch description for {job['title']}: {e}")
 
-    async def run(self) -> List[Dict[str, Any]]:
-        """Main execution method"""
+    async def run(self):
+        """
+        Main entry point for the scraper.
+        Fetches jobs and saves them to the database.
+        """
         logger.info(f"[{self.site_key}] Starting scraper run...")
         
         # Fetch jobs
         jobs = await self.fetch_jobs()
         
-        # Save to database if db_manager is available
-        if self.use_db and jobs:
+        # Save to database
+        if jobs:
             logger.info(f"[{self.site_key}] Saving {len(jobs)} jobs to database...")
-            await self.db_manager.save_jobs(jobs, source=self.site_key)
+            await self.save_results(jobs)
+            logger.info(f"[{self.site_key}] Successfully saved {len(jobs)} jobs")
+        else:
+            logger.warning(f"[{self.site_key}] No jobs found to save")
         
         return jobs

@@ -162,3 +162,10 @@ class BoeingScraper(BaseScraper):
                 logger.error(f"[{self.site_key}] Global error: {e}")
                 
         return jobs
+
+    async def run(self):
+        """Main entry point for the scraper"""
+        self.print_header()
+        jobs = await self.fetch_jobs()
+        await self.save_results(jobs)
+        return jobs

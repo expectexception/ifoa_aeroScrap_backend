@@ -3,6 +3,48 @@ from django.utils import timezone
 from django.core.validators import MinValueValidator
 
 
+def get_scraper_choices():
+    """Dynamically generate scraper choices from registered scrapers"""
+    try:
+        from scraper_manager.scrapers import SCRAPERS
+        
+        # Create nice display names
+        display_names = {
+            'aap': 'AAP Aviation',
+            'airbus': 'Airbus Careers',
+            'airindia': 'Air India Careers',
+            'allflyingjobs': 'All Flying Jobs',
+            'aviationcv': 'AviationCV',
+            'aviationindeed': 'Aviation Indeed',
+            'aviationjobsearch': 'Aviation Job Search',
+            'boeing': 'Boeing Careers',
+            'cargolux': 'Cargolux Careers',
+            'emirates': 'Emirates Group Careers',
+            'flygosh': 'Flygosh Jobs',
+            'goose': 'GOOSE Recruitment',
+            'indigo': 'IndiGo Airlines',
+            'jsfirm': 'JSfirm',
+            'linkedin': 'LinkedIn Jobs',
+            'pilots_global': 'PilotsGlobal',
+            'signature': 'Signature Aviation',
+        }
+        
+        choices = []
+        for scraper_name in sorted(SCRAPERS.keys()):
+            display_name = display_names.get(scraper_name, scraper_name.replace('_', ' ').title())
+            choices.append((scraper_name, display_name))
+        
+        # Add "All Scrapers" option at the end
+        choices.append(('all', 'All Scrapers'))
+        
+        return choices
+    except ImportError:
+        # Fallback if scrapers module not available yet
+        return [
+            ('all', 'All Scrapers'),
+        ]
+
+
 class ScraperJob(models.Model):
     """Track scraper execution jobs"""
     
@@ -14,20 +56,11 @@ class ScraperJob(models.Model):
         ('cancelled', 'Cancelled'),
     ]
     
-    SCRAPER_CHOICES = [
-        ('signature', 'Signature Aviation'),
-        ('flygosh', 'Flygosh Jobs'),
-        ('aviationindeed', 'Aviation Indeed'),
-        ('aap', 'AAP Aviation'),
-        ('indigo', 'IndiGo Airlines'),
-        ('aviationjobsearch', 'Aviation Job Search'),
-        ('goose', 'GOOSE Recruitment'),
-        ('linkedin', 'LinkedIn Jobs'),
-        ('pilots_global', 'PilotsGlobal'),
-        ('all', 'All Scrapers'),
-    ]
-    
-    scraper_name = models.CharField(max_length=50, choices=SCRAPER_CHOICES)
+    scraper_name = models.CharField(
+        max_length=50,
+        choices=get_scraper_choices(),
+        help_text='Select which scraper to run'
+    )
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     
     # Timing

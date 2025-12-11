@@ -8,8 +8,8 @@ from playwright.async_api import async_playwright, Page
 from scraper_manager.scrapers.base_scraper import BaseScraper
 
 class JSFirmScraper(BaseScraper):
-    def __init__(self, config: Dict[str, Any]):
-        super().__init__(config, site_key='jsfirm')
+    def __init__(self, config: Dict[str, Any], db_manager=None):
+        super().__init__(config, site_key='jsfirm', db_manager=db_manager)
         self.base_url = "https://www.jsfirm.com"
         self.search_url = "https://www.jsfirm.com/search" # Using home for initial nav
         self.jobs = []

@@ -148,3 +148,10 @@ class AirbusScraper(BaseScraper):
                 await browser.close()
                 
         return jobs
+
+    async def run(self):
+        """Main entry point for the scraper"""
+        self.print_header()
+        jobs = await self.fetch_jobs()
+        await self.save_results(jobs)
+        return jobs

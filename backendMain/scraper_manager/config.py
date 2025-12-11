@@ -91,19 +91,19 @@ SCRAPER_SETTINGS = {
 # Per-Site Scraper Limits
 SCRAPERS = {
     'signature': {
-        'max_jobs': 80,  # None = extract all jobs
+        'max_jobs': 50,  # None = extract all jobs
   # None = no page limit
     },
     'flygosh': {
-        'max_jobs': 80,   # Set to 50 to limit to 50 jobs
+        'max_jobs': 50,   # Set to 50 to limit to 50 jobs
   # Not applicable for listing-based scrapers
     },
     'aviationindeed': {
-        'max_jobs': 80,   # Limit for testing
+        'max_jobs': 50,   # Limit for testing
 
     },
     'aap': {
-        'max_jobs': 80,   # Limit for testing
+        'max_jobs': 50,   # Limit for testing
 
     },
     'indigo': {
@@ -139,16 +139,16 @@ SCRAPERS = {
         'search_queries': ['Captain', 'First Officer']
     },
     'emirates': {
-        'max_jobs': 100,
+        'max_jobs': 50,
         'search_queries': ['Pilot', 'Captain', 'First Officer']
     },
     'boeing': {
-        'max_jobs': 100,
+        'max_jobs': 50,
         'search_queries': ['Pilot'],
         'search_locations': ['Washington']
     },
     'airbus': {
-        'max_jobs': 100,
+        'max_jobs': 50,
         'search_queries': ['Pilot', 'Flight Test']
     },
     'pilots_global': {
@@ -261,22 +261,26 @@ SITES = {
     },
     'emirates': {
         'name': 'Emirates Group Careers',
+        'enabled': True,
         'base_url': 'https://www.emiratesgroupcareers.com',
         'description': 'Official career site for Emirates Group'
     },
     'boeing': {
         'name': 'Boeing Careers',
+        'enabled': True,
         'base_url': 'https://jobs.boeing.com',
         'description': 'Boeing Career Site'
     },
     'airbus': {
         'name': 'Airbus Careers',
+        'enabled': True,
         'base_url': 'https://ag.wd3.myworkdayjobs.com/Airbus',
         'api_url': 'https://ag.wd3.myworkdayjobs.com/wday/cxs/ag/Airbus/jobs',
         'description': 'Airbus Workday Career Site'
     },
     'pilots_global': {
         'name': 'PilotsGlobal',
+        'enabled': True,
         'base_url': 'https://pilotsglobal.com',
         'description': 'PilotsGlobal Job Board'
     }
